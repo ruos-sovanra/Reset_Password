@@ -42,5 +42,11 @@ public class BaseResponse<T> {
                 .setMessage("Successfully update the entry!");
     }
 
+    public static <T> BaseResponse<T> deleteSuccess(){
+        return new BaseResponse<T>()
+                .setStatus(HttpStatus.OK.value())
+                .setMessage("Successfully deleted the entry!");
+    }
+
 
 }

@@ -67,14 +67,6 @@ public class GlobalRestControllerAdviser {
                 .setMetadata(ex.getMessage());
     }
 
-//    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
-//        Map<String, Object> body = new HashMap<>();
-//        body.put("status", HttpStatus.BAD_REQUEST);
-//        body.put("errors", ex.getBindingResult().getAllErrors());
-//
-//        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
-//    }
 
     //    image exception , image size, image format ...
     @ExceptionHandler(ResponseStatusException.class)

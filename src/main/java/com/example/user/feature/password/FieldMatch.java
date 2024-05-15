@@ -2,14 +2,14 @@ package com.example.user.feature.password;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-
 import java.lang.annotation.*;
 
-@Documented
-@Constraint(validatedBy = FieldMatchValidator.class)
-@Target({ElementType.TYPE})
+@Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
+@Constraint(validatedBy = FieldMatchValidator.class)
+@Documented
 public @interface FieldMatch {
+
     String message() default "{constraints.fieldmatch}";
 
     Class<?>[] groups() default {};
@@ -20,8 +20,9 @@ public @interface FieldMatch {
 
     String second();
 
-    @Target({ElementType.TYPE})
+    @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
     @Retention(RetentionPolicy.RUNTIME)
+    @Documented
     @interface List {
         FieldMatch[] value();
     }

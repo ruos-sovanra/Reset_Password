@@ -3,6 +3,7 @@ package com.example.user.feature.mail;
 import com.example.user.domain.ForgotPassword;
 import com.example.user.domain.User;
 import com.example.user.feature.mail.dto.ChangePassword;
+import com.example.user.feature.mail.dto.ChangePasswordWithOldPassword;
 import com.example.user.feature.mail.dto.MailBody;
 import com.example.user.feature.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.Date;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Random;
 
@@ -29,35 +29,70 @@ public class ForgotPasswordRestController {
 
 
     @PostMapping("verify-email/{email}")
-    public ResponseEntity<?> forgotPassword(String email) {
+    public ResponseEntity<?> forgotPassword(@PathVariable String email) {
         User user = userRepository.findByEmail(email);
         int otp = generateOTP();
         MailBody mailBody = MailBody.builder()
                 .to(user.getEmail())
                 .subject("Reset Password")
-                .text("Here is the OTP to reset your password: "+otp)
                 .build();
         ForgotPassword fp = new ForgotPassword();
         fp.setOtp(otp);
         fp.setUser(user);
         fp.setExpiryDate(new Date(System.currentTimeMillis() + 70 * 1000));
 
-        mailService.sendSimpleMessage(mailBody);
+        mailService.sendOtpMessage(mailBody, String.valueOf(otp));
         forgotPasswordRepository.save(fp);
         return ResponseEntity.ok("OTP sent to your email");
     }
 
     @PostMapping("verify-otp/{otp}/{email}")
-    public ResponseEntity<String> verifyOTP(@PathVariable String email,@PathVariable Integer otp) {
-        User user = userRepository.findByEmail(email);
-        ForgotPassword fp = forgotPasswordRepository.findByOtpAndUser(otp,user).orElseThrow(() -> new NoSuchElementException("Invalid OTP"));
+    public ResponseEntity<String> verifyOTP(@PathVariable String email, @PathVariable Integer otp) {
+        User existingUser = userRepository.findByEmail(email);
 
-        if (fp.getExpiryDate().before(Date.from(Instant.now()))) {
-            forgotPasswordRepository.deleteById(fp.getId());
+        // If a User with the given email already exists, update the password
+        if (existingUser != null) {
+            // Find the existing ForgotPassword entity for the existing User
+            ForgotPassword existingFp = forgotPasswordRepository.findByUser(existingUser);
+
+            // If an existing ForgotPassword entity is found, delete it
+            if (existingFp != null) {
+                forgotPasswordRepository.deleteById(existingFp.getId());
+            }
+
+            // Verify the new OTP for the existing User
+            ForgotPassword newFp = forgotPasswordRepository.findByOtpAndUser(otp, existingUser);
+
+            if (newFp != null && newFp.getExpiryDate().before(Date.from(Instant.now()))) {
+                forgotPasswordRepository.deleteById(newFp.getId());
+                return new ResponseEntity<>("OTP expired", HttpStatus.EXPECTATION_FAILED);
+            }
+
+            // Update the password for the existing User
+            // existingUser.setPassword(newPassword);
+            // userRepository.save(existingUser);
+
+            return new ResponseEntity<>("OTP verified and password updated", HttpStatus.OK);
+        }
+
+        // If no existing User is found, create a new User with a new user_id
+        User newUser = new User();
+        newUser.setEmail(email);
+        // Set other fields as necessary
+        userRepository.save(newUser);
+
+        // Verify the new OTP for the new User
+        ForgotPassword newFp = forgotPasswordRepository.findByOtpAndUser(otp, newUser);
+
+        if (newFp != null && newFp.getExpiryDate().before(Date.from(Instant.now()))) {
+            forgotPasswordRepository.deleteById(newFp.getId());
             return new ResponseEntity<>("OTP expired", HttpStatus.EXPECTATION_FAILED);
         }
-        return new ResponseEntity<>("OTP verified", HttpStatus.OK);
+
+        return new ResponseEntity<>("OTP verified and new user created", HttpStatus.OK);
     }
+
+
 
     @PostMapping("reset-password/{email}")
     public ResponseEntity<String> resetPassword(@RequestBody ChangePassword changePassword, String email) {
@@ -71,8 +106,30 @@ public class ForgotPasswordRestController {
         return new ResponseEntity<>("Password reset successfully", HttpStatus.OK);
     }
 
+    @PostMapping("reset-password-with-old/{email}")
+    public ResponseEntity<String> resetPasswordWithOld(@RequestBody ChangePasswordWithOldPassword changePassword, @PathVariable String email) {
+        if(!Objects.equals(changePassword.newPassword(), changePassword.confirmPassword())){
+            return new ResponseEntity<>("New passwords do not match", HttpStatus.BAD_REQUEST);
+        }
+
+        User user = userRepository.findByEmail(email);
+        if(user == null){
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
+
+        if(!passwordEncoder.matches(changePassword.oldPassword(), user.getPassword())){
+            return new ResponseEntity<>("Old password is incorrect", HttpStatus.UNAUTHORIZED);
+        }
+
+        user.setPassword(passwordEncoder.encode(changePassword.newPassword()));
+        userRepository.save(user);
+
+        return new ResponseEntity<>("Password reset successfully", HttpStatus.OK);
+    }
+
     private Integer generateOTP() {
         Random random = new Random();
         return random.nextInt(100000,999999);
     }
+
 }

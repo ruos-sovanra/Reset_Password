@@ -2,7 +2,7 @@ spring:
   application:
     name: user
   datasource:
-    url: jdbc:postgresql://127.0.0.1:5432/testing
+    url: jdbc:postgresql://127.0.0.1:5432/alumni
     username: postgres
     password: qwerty
     driver-class-name: org.postgresql.Driver

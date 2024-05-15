@@ -1,43 +1,25 @@
 package com.example.user.feature.password;
 
-
-import com.example.user.feature.user.dto.UserRequest;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import org.springframework.beans.BeanWrapperImpl;
 
-public class FieldMatchValidator implements ConstraintValidator<FieldMatch, UserRequest> {
+public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Object> {
+
     private String firstFieldName;
     private String secondFieldName;
 
     @Override
-    public void initialize(FieldMatch constraint) {
-        firstFieldName = constraint.first();
-        secondFieldName = constraint.second();
+    public void initialize(FieldMatch constraintAnnotation) {
+        firstFieldName = constraintAnnotation.first();
+        secondFieldName = constraintAnnotation.second();
     }
 
     @Override
-    public boolean isValid(UserRequest value, ConstraintValidatorContext context) {
-        final Object firstObj = switch (firstFieldName) {
-            case "password" -> value.password();
-            case "confirm_password" -> value.confirm_password();
-            default -> throw new IllegalArgumentException("Invalid field name: " + firstFieldName);
-        };
-        final Object secondObj = switch (secondFieldName) {
-            case "password" -> value.password();
-            case "confirm_password" -> value.confirm_password();
-            default -> throw new IllegalArgumentException("Invalid field name: " + secondFieldName);
-        };
+    public boolean isValid(Object value, ConstraintValidatorContext context) {
+        Object firstFieldValue = new BeanWrapperImpl(value).getPropertyValue(firstFieldName);
+        Object secondFieldValue = new BeanWrapperImpl(value).getPropertyValue(secondFieldName);
 
-        if (firstObj == null && secondObj == null) {
-            return true;
-        } else if (firstObj != null && secondObj != null) {
-            return firstObj.equals(secondObj);
-        } else {
-            context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("The password fields must match")
-                    .addPropertyNode(firstFieldName)
-                    .addConstraintViolation();
-            return false;
-        }
+        return firstFieldValue == null && secondFieldValue == null || firstFieldValue != null && firstFieldValue.equals(secondFieldValue);
     }
 }

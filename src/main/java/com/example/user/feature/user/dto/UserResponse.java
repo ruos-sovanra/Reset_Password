@@ -2,6 +2,8 @@ package com.example.user.feature.user.dto;
 
 import lombok.Builder;
 
+import java.util.List;
+
 @Builder
 public record UserResponse(
         String id,
@@ -12,9 +14,11 @@ public record UserResponse(
         String phone,
         String created_at,
         String updated_at,
-        boolean isDisabled,
-        boolean isVerify,
+        boolean is_disabled,
+        boolean is_verified,
         String avatar,
-        String password
+        String password,
+        String roleName,
+        String AccTypeName
 ) {
 }

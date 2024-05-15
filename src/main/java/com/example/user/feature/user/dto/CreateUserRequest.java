@@ -1,15 +1,17 @@
 package com.example.user.feature.user.dto;
 
 import com.example.user.feature.password.FieldMatch;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import org.springframework.validation.annotation.Validated;
 
 @Builder
 @Validated
 @FieldMatch(first = "password", second = "confirm_password", message = "The password fields must match")
-public record UserRequest(
+public record CreateUserRequest(
         String first_name,
         String last_name,
         String username,
@@ -19,7 +21,9 @@ public record UserRequest(
         String password,
         String confirm_password,
         String phone,
-        String avatar
+        String avatar,
+        String roleName,
+        String AccTypeName
 
 ) {
 }

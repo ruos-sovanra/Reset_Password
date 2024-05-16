@@ -78,6 +78,7 @@ public class SecurityConfiguration {
                         (ex) -> ex.authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
                                 .accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
 
+
                 .build();
     }
 

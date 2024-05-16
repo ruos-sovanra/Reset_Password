@@ -60,4 +60,12 @@ public class AdminRestController {
         return BaseResponse.<UserResponse>createSuccess()
                 .setPayload(userService.createUsers(userRequest));
     }
+
+    @PatchMapping("/{id}/disable")
+    @Operation(summary = "Disable user")
+    public BaseResponse<UserResponse> isDisabled(@PathVariable String id){
+        return BaseResponse.<UserResponse>updateSuccess()
+                .setPayload(userService.isDisabled(id));
+    }
+
 }

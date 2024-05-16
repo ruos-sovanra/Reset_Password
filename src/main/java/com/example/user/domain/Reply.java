@@ -1,4 +1,4 @@
 package com.example.user.domain;
 
-public class Job {
+public class Reply {
 }

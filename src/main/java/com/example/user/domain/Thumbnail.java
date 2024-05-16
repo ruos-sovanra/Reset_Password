@@ -5,18 +5,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
 @Entity
-@Table(name = "al_forgot_password")
+@Table(name = "al_thumbnails")
 @Getter
 @Setter
 @NoArgsConstructor
-public class ForgotPassword {
+public class Thumbnail {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    private Integer otp;
-    private Date expiryDate;
-    @OneToOne
-    private User user;
+    private String thumbnailUrl;
+
+    @ManyToOne
+    @JoinColumn(name = "social_id")
+    private Social social;
 }

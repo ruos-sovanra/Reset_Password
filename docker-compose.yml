@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  alumni:
+    container_name: 'alumni'
+    #    image: 'surveybox_stage:latest'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - TZ=Asia/Bangkok
+    ports:
+      - '8181:8080'   #follow you port

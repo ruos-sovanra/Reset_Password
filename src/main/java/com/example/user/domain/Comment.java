@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,12 +20,12 @@ public class Comment {
     private String id;
     private String comment;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "parent_comment_id")
     private Comment parentComment;
 
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> replies;
+    private List<Comment> replies = new ArrayList<>(); // Initialize the replies list to an empty list
 
     @ManyToOne
     @JoinColumn(name = "userId", referencedColumnName = "id")
@@ -33,7 +34,6 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "social_id")
     private Social social;
-
 
     private LocalDate createdAt;
     private LocalDate updatedAt;

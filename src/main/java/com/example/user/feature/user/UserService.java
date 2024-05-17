@@ -15,4 +15,5 @@ public interface UserService {
     UserResponse isVerified(String id);
     UserResponse isDisabled(String id);
     UserResponse createUsers(CreateUserRequest userRequest);
+    List<UserResponse> getAllUsersByIsVerify();
 }

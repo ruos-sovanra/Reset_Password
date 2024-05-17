@@ -6,6 +6,7 @@ import com.example.user.domain.Role;
 import com.example.user.feature.repo.AccTypeRepository;
 import com.example.user.feature.repo.PostTypeRepository;
 import com.example.user.feature.repo.RoleRepository;
+import com.example.user.feature.repo.StatusRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -19,12 +20,14 @@ public class DataInitializer {
     private final RoleRepository roleRepository;
     private final AccTypeRepository accTypeRepository;
     private final PostTypeRepository postTypeRepository;
+    private final StatusRepository statusRepository;
 
     @PostConstruct
     void initData(){
         roleInit();
         accTypeInit();
         postTypeInit();
+        statusInit();
     }
 
     void roleInit(){
@@ -59,6 +62,18 @@ public class DataInitializer {
             });
         }
     }
+
+    void statusInit(){
+        List<String> statuses = List.of("URGENT","ACTIVE","FULFILLED","CLOSED");
+        if (statusRepository.count() == 0){
+            statuses.forEach(status -> {
+                com.example.user.domain.Status newStatus = new com.example.user.domain.Status();
+                newStatus.setStatus(status);
+                statusRepository.save(newStatus);
+            });
+        }
+    }
+
 
 
 

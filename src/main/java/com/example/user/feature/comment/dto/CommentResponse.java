@@ -3,21 +3,21 @@ package com.example.user.feature.comment.dto;
 import com.example.user.domain.Comment;
 import lombok.Builder;
 
+import java.util.List;
 
 @Builder
 public record CommentResponse(
         String id,
         String userName,
         String comment,
-        CommentResponse nestedComment
-
+        List<CommentResponse> replies // Add this line
 ) {
-    public static CommentResponse withNestedComment(Comment comment, CommentResponse nestedComment) {
+    public static CommentResponse withNestedComment(Comment comment, CommentResponse nestedComment, List<CommentResponse> replies) {
         return new CommentResponse(
                 comment.getId(),
                 comment.getUser().getUsername(),
                 comment.getComment(),
-                nestedComment
+                replies // Add this line
         );
     }
 }

@@ -24,8 +24,6 @@ public class Social {
 
     private Integer likes;
     private Integer shares;
-    private LocalDate created_at;
-    private LocalDate updated_at;
 
     @ManyToOne
     @JoinColumn(name = "post_type_id")

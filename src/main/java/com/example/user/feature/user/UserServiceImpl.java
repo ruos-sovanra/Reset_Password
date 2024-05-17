@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService{
         user.setRole(userRole);
         user.setAccType(accType);
         user.setPassword(new BCryptPasswordEncoder().encode(userRequest.password()));
-        user.setConfirm_password(new BCryptPasswordEncoder().encode(userRequest.confirm_password()));
+        user.setConfirmPassword(new BCryptPasswordEncoder().encode(userRequest.confirmPassword()));
         User savedUser = userRepository.save(user);
         return userMapper.toUserResponse(savedUser);
     }
@@ -56,8 +56,8 @@ public class UserServiceImpl implements UserService{
     public UserResponse updateUser(String id, UserUpdateRequest userRequest) {
         User user = userRepository.findById(id).orElseThrow(()-> new NoSuchElementException("User not found"));
         user.setAvatar(userRequest.avatar());
-        user.setFirst_name(userRequest.first_name());
-        user.setLast_name(userRequest.last_name());
+        user.setFirstName(userRequest.firstName());
+        user.setLastName(userRequest.lastName());
         user.setPhone(userRequest.phone());
         user.setUsername(userRequest.username());
         userRepository.save(user);
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserResponse isVerified(String id) {
         User user = userRepository.findById(id).orElseThrow(()-> new NoSuchElementException("User not found"));
-        user.set_verified(true); // Set is_verified to true
+        user.setIsVerified(true); // Set is_verified to true
 
         // Check the account type and set the role accordingly
         if (user.getAccType().getName().equalsIgnoreCase("ALUMNI")) {
@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserResponse isDisabled(String id) {
         User user = userRepository.findById(id).orElseThrow(()-> new NoSuchElementException("User not found"));
-        user.set_disabled(true); // Set is_disabled to true
+        user.setIsDisabled(true); // Set is_disabled to true
         User disabledUser = userRepository.save(user); // Save the updated user
         return userMapper.toUserResponse(disabledUser);
     }
@@ -112,15 +112,21 @@ public class UserServiceImpl implements UserService{
                 .orElseThrow(() -> new NoSuchElementException("AccType not found"));
         user.setRole(userRole);
         user.setAccType(accType);
-        user.set_verified(true);
+        user.setIsVerified(true);
         user.setPassword(new BCryptPasswordEncoder().encode(userRequest.password()));
-        user.setConfirm_password(new BCryptPasswordEncoder().encode(userRequest.confirm_password()));
+        user.setConfirmPassword(new BCryptPasswordEncoder().encode(userRequest.confirmPassword()));
 
         // Set isAdmin to true if the role is ADMIN
         if (userRequest.roleName().equalsIgnoreCase("ADMIN")) {
-            user.setAdmin(true);
+            user.setIsAdmin(true);
         }
         userRepository.save(user);
         return userMapper.toUserResponse(user);
+    }
+
+    @Override
+    public List<UserResponse> getAllUsersByIsVerify() {
+        List<User> users = userRepository.findByIsVerified(false);
+        return users.stream().map(userMapper::toUserResponse).toList();
     }
 }

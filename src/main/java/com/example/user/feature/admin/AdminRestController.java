@@ -47,6 +47,14 @@ public class AdminRestController {
                 .setPayload(userService.getUserById(id));
     }
 
+    @GetMapping("/verify")
+    @Operation(summary = "Get all users by is verify")
+    public BaseResponse<List<UserResponse>> getAllUsersByIsVerify(){
+        return BaseResponse.<List<UserResponse>>ok()
+                .setPayload(userService.getAllUsersByIsVerify());
+    }
+
+
     @PatchMapping("/{id}/verify")
     @Operation(summary = "Verify user")
     public BaseResponse<UserResponse> isVerified(@PathVariable String id){

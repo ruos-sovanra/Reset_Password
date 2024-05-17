@@ -2,8 +2,10 @@ package com.example.user.feature.social;
 
 import com.example.user.domain.PostType;
 import com.example.user.domain.Social;
+import com.example.user.domain.Thumbnail;
 import com.example.user.domain.User;
 import com.example.user.feature.repo.PostTypeRepository;
+import com.example.user.feature.repo.ThumbnailRepository;
 import com.example.user.feature.social.dto.PostRequest;
 import com.example.user.feature.social.dto.PostResponse;
 import com.example.user.feature.user.UserRepository;
@@ -20,6 +22,7 @@ public class SocialServiceImpl implements SocialService {
     private final SocialRepository socialRepository;
     private final PostTypeRepository postTypeRepository;
     private final UserRepository userRepository;
+    private final ThumbnailRepository thumbnailRepository;
     private final SocialMapper socialMapper;
 
     @Override
@@ -32,6 +35,16 @@ public class SocialServiceImpl implements SocialService {
         social.setUser(user);
         social.setPostType(postType);
         socialRepository.save(social);
+
+          List<Thumbnail> thumbnails = social.getThumbnails();
+
+        System.out.println("thumbnails = " + thumbnails);
+        for (Thumbnail thumbnail : thumbnails) {
+            thumbnail.setSocial(social);
+            thumbnailRepository.save(thumbnail);
+        }
+
+
         return socialMapper.toPostResponse(social);
     }
 

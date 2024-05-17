@@ -1,12 +1,7 @@
 package com.example.user.init;
 
-import com.example.user.domain.AccType;
-import com.example.user.domain.PostType;
-import com.example.user.domain.Role;
-import com.example.user.feature.repo.AccTypeRepository;
-import com.example.user.feature.repo.PostTypeRepository;
-import com.example.user.feature.repo.RoleRepository;
-import com.example.user.feature.repo.StatusRepository;
+import com.example.user.domain.*;
+import com.example.user.feature.repo.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -21,6 +16,9 @@ public class DataInitializer {
     private final AccTypeRepository accTypeRepository;
     private final PostTypeRepository postTypeRepository;
     private final StatusRepository statusRepository;
+    private final DonationTypeRepository donationTypeRepository;
+    private final EventTypeRepository eventTypeRepository;
+
 
     @PostConstruct
     void initData(){
@@ -28,6 +26,8 @@ public class DataInitializer {
         accTypeInit();
         postTypeInit();
         statusInit();
+        donationTypeInit();
+        eventTypeInit();
     }
 
     void roleInit(){
@@ -53,7 +53,7 @@ public class DataInitializer {
     }
 
     void postTypeInit(){
-        List<String> postTypes = List.of("EVENT","JOB","SOCIAL");
+        List<String> postTypes = List.of("EVENT","JOB","SOCIAL","DONATION");
         if (postTypeRepository.count() == 0){
             postTypes.forEach(postType -> {
                 PostType newPostType = new PostType();
@@ -70,6 +70,28 @@ public class DataInitializer {
                 com.example.user.domain.Status newStatus = new com.example.user.domain.Status();
                 newStatus.setStatus(status);
                 statusRepository.save(newStatus);
+            });
+        }
+    }
+
+    void donationTypeInit(){
+        List<String> donationTypes = List.of("MONEY","ITEM");
+        if (donationTypeRepository.count() == 0){
+            donationTypes.forEach(donationType -> {
+                DonationType newDonationType = new DonationType();
+                newDonationType.setDonationType(donationType);
+                donationTypeRepository.save(newDonationType);
+            });
+        }
+    }
+
+    void eventTypeInit(){
+        List<String> eventTypes = List.of("NATURE","OLD PEOPLE","CHILDREN");
+        if (eventTypeRepository.count() == 0){
+            eventTypes.forEach(eventType -> {
+                EventType newEventType = new EventType();
+                newEventType.setEventType(eventType);
+                eventTypeRepository.save(newEventType);
             });
         }
     }

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(name = "al_users")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -29,6 +29,7 @@ public class User {
     private String avatar;
     private boolean is_disabled;
     private boolean is_verified;
+    private boolean isAdmin;
     private boolean isAccountExpired;
     private boolean isAccountLocked;
     private boolean isCredentialsExpired;

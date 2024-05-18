@@ -96,6 +96,14 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public UserResponse isDisabled(String id) {
+        User user = userRepository.findById(id).orElseThrow(()-> new NoSuchElementException("User not found"));
+        user.set_disabled(true); // Set is_disabled to true
+        User disabledUser = userRepository.save(user); // Save the updated user
+        return userMapper.toUserResponse(disabledUser);
+    }
+
+    @Override
     public UserResponse createUsers(CreateUserRequest userRequest) {
         User user = userMapper.createToUserResponse(userRequest);
         Role userRole = roleRepository.findByName(userRequest.roleName())
@@ -107,6 +115,11 @@ public class UserServiceImpl implements UserService{
         user.set_verified(true);
         user.setPassword(new BCryptPasswordEncoder().encode(userRequest.password()));
         user.setConfirm_password(new BCryptPasswordEncoder().encode(userRequest.confirm_password()));
+
+        // Set isAdmin to true if the role is ADMIN
+        if (userRequest.roleName().equalsIgnoreCase("ADMIN")) {
+            user.setAdmin(true);
+        }
         userRepository.save(user);
         return userMapper.toUserResponse(user);
     }

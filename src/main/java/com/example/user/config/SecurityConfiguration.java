@@ -63,6 +63,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/forgot-password/**").permitAll()
                         .requestMatchers("/api/v1/users/**").permitAll()
                         .requestMatchers("/api/v1/admin/**").permitAll()
+                        .requestMatchers("images/**").permitAll()
                         .anyRequest().authenticated()
         ).csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)

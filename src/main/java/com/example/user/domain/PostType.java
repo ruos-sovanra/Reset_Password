@@ -19,5 +19,5 @@ public class PostType {
     private String type;
 
     @OneToMany(mappedBy = "postType")
-    private List<Post> posts;
+    private List<Social> socials;
 }

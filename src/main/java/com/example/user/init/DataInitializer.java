@@ -1,8 +1,10 @@
 package com.example.user.init;
 
 import com.example.user.domain.AccType;
+import com.example.user.domain.PostType;
 import com.example.user.domain.Role;
 import com.example.user.feature.repo.AccTypeRepository;
+import com.example.user.feature.repo.PostTypeRepository;
 import com.example.user.feature.repo.RoleRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -16,11 +18,13 @@ public class DataInitializer {
 
     private final RoleRepository roleRepository;
     private final AccTypeRepository accTypeRepository;
+    private final PostTypeRepository postTypeRepository;
 
     @PostConstruct
     void initData(){
         roleInit();
         accTypeInit();
+        postTypeInit();
     }
 
     void roleInit(){
@@ -44,5 +48,18 @@ public class DataInitializer {
             });
         }
     }
+
+    void postTypeInit(){
+        List<String> postTypes = List.of("EVENT","JOB","SOCIAL");
+        if (postTypeRepository.count() == 0){
+            postTypes.forEach(postType -> {
+                PostType newPostType = new PostType();
+                newPostType.setType(postType);
+                postTypeRepository.save(newPostType);
+            });
+        }
+    }
+
+
 
 }

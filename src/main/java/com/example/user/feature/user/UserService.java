@@ -13,5 +13,6 @@ public interface UserService {
     void deleteUser(String id);
     UserResponse updateProfile(String id, ProfileUpdateRequest profileUpdateRequest);
     UserResponse isVerified(String id);
+    UserResponse isDisabled(String id);
     UserResponse createUsers(CreateUserRequest userRequest);
 }

@@ -2,15 +2,17 @@ spring:
   application:
     name: user
   datasource:
-    url: jdbc:postgresql://152.42.163.114:5434/alumni_db
+    url: jdbc:postgresql://localhost:5432/user
     username: postgres
-    password: qwerty
+    password: lyhou123
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
+
+
   mail:
     host: smtp.gmail.com
     port: 587
@@ -27,7 +29,13 @@ springdoc:
     path: /api
 
 server:
-  port: 8181  # Add your desired port number here
+  port: 8181
+
+file:
+  storage-dir: "filestorage/images/"
+  client-dir: "/images/**"
+  storage-dir1: "cvStorage/cv/"
+  client-dir1: "/cv/**"  # Add your desired port number here
 
 ACCESS_TOKEN_PRIVATE_KEY_PATH: keys/access-token-private.key
 ACCESS_TOKEN_PUBLIC_KEY_PATH: keys/access-token-public.key

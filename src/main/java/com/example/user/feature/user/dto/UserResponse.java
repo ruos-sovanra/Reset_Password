@@ -17,7 +17,6 @@ public record UserResponse(
         boolean is_disabled,
         boolean is_verified,
         String avatar,
-        String password,
         String roleName,
         String AccTypeName
 ) {

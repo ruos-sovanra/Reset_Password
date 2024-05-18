@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 public interface DonationMapper {
 
     @Mapping(target = "donationTypeName", source = "donationType.donationType")
-    @Mapping(target = "userName", source = "user.id")
+    @Mapping(target = "userName", source = "user.username")
     @Mapping(target = "postTypeName", source = "postType.type")
     @Mapping(target = "eventTypeName", source = "eventType.eventType")
     DonationResponse toDonationResponse(Donation donation);

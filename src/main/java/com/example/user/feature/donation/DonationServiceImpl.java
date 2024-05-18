@@ -49,7 +49,7 @@ public class DonationServiceImpl implements DonationService {
         User user = userRepository.findById(donationRequest.userId())
                 .orElseThrow(() -> new NoSuchElementException("User not found"));
 
-        PostType postType = postTypeRepository.findById("DONATION")
+        PostType postType = postTypeRepository.findByType("EVENT")
                 .orElseThrow(() -> new NoSuchElementException("PostType not found"));
 
         DonationType donationType = donationTypeRepository.findById(donationRequest.donationTypeId())
@@ -78,7 +78,7 @@ public class DonationServiceImpl implements DonationService {
         User user = userRepository.findById(donationRequest.userId())
                 .orElseThrow(() -> new NoSuchElementException("User not found"));
 
-        PostType postType = postTypeRepository.findById("DONATION")
+        PostType postType = postTypeRepository.findById("3cfd4e85-2a05-427d-91db-4ee1aa4ce185")
                 .orElseThrow(() -> new NoSuchElementException("PostType not found"));
 
         DonationType donationType = donationTypeRepository.findById(donationRequest.donationTypeId())

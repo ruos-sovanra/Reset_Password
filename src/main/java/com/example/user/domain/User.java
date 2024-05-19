@@ -3,10 +3,7 @@ package com.example.user.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "al_users")
@@ -19,22 +16,22 @@ public class User {
     private String id;
     @Column(unique = true)
     private String username;
-    private String first_name;
-    private String last_name;
+    private String firstName;
+    private String lastName;
     @Column(unique = true)
     private String email;
     private String phone;
     private String password;
-    private String confirm_password;
+    private String confirmPassword;
     private String avatar;
-    private boolean is_disabled;
-    private boolean is_verified;
-    private boolean isAdmin;
-    private boolean isAccountExpired;
-    private boolean isAccountLocked;
-    private boolean isCredentialsExpired;
-    private LocalDate created_at;
-    private Timestamp updated_at;
+    private Boolean isDisabled;
+    private Boolean isVerified;
+    private Boolean isAdmin;
+    private Boolean isAccountExpired;
+    private Boolean isAccountLocked;
+    private Boolean isCredentialsExpired;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     @OneToOne(mappedBy = "user")
     private ForgotPassword forgotPassword;
@@ -47,6 +44,7 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "acc_type_id")
     private AccType accType;
+
 
 
 }

@@ -12,14 +12,14 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @FieldMatch(first = "password", second = "confirm_password", message = "The password fields must match")
 public record CreateUserRequest(
-        String first_name,
-        String last_name,
+        String firstName,
+        String lastName,
         String username,
         @Email(message = "Email format is not correct!")
         String email,
         @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", message = "Password must be at least 8 characters and include at least one uppercase letter, one lowercase letter, one number, and one special character")
         String password,
-        String confirm_password,
+        String confirmPassword,
         String phone,
         String avatar,
         String roleName,

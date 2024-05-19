@@ -14,8 +14,8 @@ public interface UserMapper {
 
     @Mapping(target = "AccTypeName", source = "accType.name")
     @Mapping(target = "roleName", source = "role.name")
-    @Mapping(target = "is_disabled", source = "_disabled")
-    @Mapping(target = "is_verified", source = "_verified")
+    @Mapping(source = "createdAt", target = "createdAt")
+    @Mapping(source = "updatedAt", target = "updatedAt")
     UserResponse toUserResponse(User user);
     User requestToUserResponse(UserRequest userRequest);
     User createToUserResponse(CreateUserRequest userRequest);

@@ -2,20 +2,21 @@ package com.example.user.feature.user.dto;
 
 import lombok.Builder;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
 public record UserResponse(
         String id,
-        String first_name,
-        String last_name,
+        String firstName,
+        String lastName,
         String username,
         String email,
         String phone,
-        String created_at,
-        String updated_at,
-        boolean is_disabled,
-        boolean is_verified,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt,
+        Boolean isDisabled,
+        Boolean isVerified,
         String avatar,
         String roleName,
         String AccTypeName

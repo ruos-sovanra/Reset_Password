@@ -28,8 +28,7 @@ public class CommentServiceImpl implements CommentService{
     public CommentResponse createComment(CommentRequest commentRequest) {
         Comment parentComment = null;
         if (commentRequest.parentCommentId() != null) {
-            parentComment = commentRepository.findById(commentRequest.parentCommentId())
-                    .orElseThrow(() -> new NoSuchElementException("Parent comment not founds"));
+            parentComment = commentRepository.findById(commentRequest.parentCommentId()).orElse(null);
         }
         Comment comment = commentMapper.responseToComment(commentRequest, parentComment);
         User user = userRepository.findById(commentRequest.userId()).orElseThrow(()-> new NoSuchElementException("User not found"));

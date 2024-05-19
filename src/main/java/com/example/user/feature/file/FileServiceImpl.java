@@ -1,6 +1,6 @@
-package com.example.user.feature.file.fileserviceimpl;
+package com.example.user.feature.file;
 
-import com.example.user.feature.file.FileService;
+
 import com.example.user.feature.file.dto.FileResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,25 +14,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.stream.Stream;
 
 @Service
-
 public class FileServiceImpl implements FileService {
-    @Value("${file.storage-dir}")
+    @Value("${file_storage.image_location}")
     String fileStorageDir;
     private static final Set<String> SUPPORTED_IMAGE_TYPES = Set.of(
             MediaType.IMAGE_JPEG_VALUE,
             MediaType.IMAGE_PNG_VALUE,
-            MediaType.IMAGE_GIF_VALUE,
-            "application/pdf",
-            "application/msword",
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+            MediaType.IMAGE_GIF_VALUE);
+    //http://localhost:8888/api/v1/files/download/3f54df29-31f0-4c74-9552-62dfca9e4f1e.png
     private String generateImageUrl(HttpServletRequest request, String filename) {
         return String.format("%s://%s:%d/images/%s",
                 request.getScheme(),
@@ -55,6 +55,7 @@ public class FileServiceImpl implements FileService {
                     contentType + " not  allowed!! ");
         }
         try {
+//       Check if the directory doesn't exist , we will create the directory
             Path fileStoragePath = Path.of(fileStorageDir);
             if (!Files.exists(fileStoragePath)) {
                 Files.createDirectories(fileStoragePath);
@@ -62,6 +63,7 @@ public class FileServiceImpl implements FileService {
             String fileName = UUID.randomUUID() + "." +
                     Objects.requireNonNull(file.getOriginalFilename())
                             .split("\\.")[1];
+            // handle if there are more than one dot !
 
             Files.copy(file.getInputStream(),
                     fileStoragePath.resolve(fileName),
@@ -81,22 +83,27 @@ public class FileServiceImpl implements FileService {
         return FileResponse.builder()
                 .downloadUrl(generateDownloadImageUrl(request,filename))
                 .fileType(file.getContentType())
-                .size((float) file.getSize() / 1024)
+                .size((float) file.getSize() / 1024) // in KB
                 .filename(filename)
                 .fullUrl(fullImageUrl).build();
     }
+
+
+
     @Override
-    public List<String> uploadMultipleFiles(MultipartFile[] files) {
-        var fileNames = new ArrayList<String>();
+    public List<String> uploadMultipleFiles(MultipartFile[] files, HttpServletRequest request) {
+        var fileUrls = new ArrayList<String>();
         for (var file : files) {
-            fileNames.add(uploadFile(file));
+            FileResponse fileResponse = uploadSingleFile(file, request);
+            fileUrls.add(fileResponse.fullUrl());
         }
-        return fileNames;
+        return fileUrls;
     }
+
     @Override
     public ResponseEntity<Resource> serveFile(String filename, HttpServletRequest request) {
         try {
-
+            //        get path of the images
             Path imagePath = Path.of(fileStorageDir).resolve(filename);
             Resource resourceUrl = new UrlResource(imagePath.toUri());
             if(resourceUrl.exists()){
@@ -106,7 +113,7 @@ public class FileServiceImpl implements FileService {
                         .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resourceUrl.getFilename() + "\"")
                         .body(resourceUrl);
             }else {
-
+                // bad request
                 throw new RuntimeException("Resources not found ! ");
             }
         } catch (MalformedURLException ex) {
@@ -120,4 +127,5 @@ public class FileServiceImpl implements FileService {
     public void deleteFile(String filename) {
 
     }
+
 }

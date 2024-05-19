@@ -25,7 +25,9 @@ spring:
 springdoc:
   swagger-ui:
     path: /api
-
+file_storage:
+  image_location: "/filestorage/images/"
+  client_path: "/images/**"
 server:
   port: 8080  # Add your desired port number here
 

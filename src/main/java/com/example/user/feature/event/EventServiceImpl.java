@@ -4,8 +4,11 @@ import com.example.user.feature.event.dto.EventRequest;
 import com.example.user.feature.event.dto.EventRespone;
 import com.example.user.mapper.EventMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -29,6 +32,9 @@ public class EventServiceImpl implements EventService{
     public EventRespone createEvent(EventRequest eventRequest) {
 
         var event = eventMapper.mapToEvents(eventRequest);
+        event.setScheduledDate(LocalDateTime.now());
+        event.setEventDescription(eventRequest.eventDec());
+        event.setEventName(eventRequest.eventName());
 
         return eventMapper.mapToEventRespone(eventRepository.save(event));
     }
@@ -42,7 +48,9 @@ public class EventServiceImpl implements EventService{
         var event = eventMapper.mapToEvents(eventRequest);
 
         event.setId(eventId.getId());
-
+        event.setScheduledDate(LocalDateTime.now());
+        event.setEventDescription(eventRequest.eventDec());
+        event.setEventName(eventRequest.eventName());
 
         return eventMapper.mapToEventRespone(eventRepository.save(event));
     }
@@ -65,5 +73,14 @@ public class EventServiceImpl implements EventService{
                 new NoSuchElementException("Event not found "));
 
         return eventMapper.mapToEventRespone(event);
+    }
+
+    @Override
+    public List<EventRespone> getByPageNation(int page, int size) {
+        int pageSize = page+1;
+        Pageable pageable = PageRequest.of(pageSize, size);
+        var events = eventRepository.findAll(pageable).getContent();
+        return events.stream().map(eventMapper::mapToEventRespone)
+                .toList();
     }
 }

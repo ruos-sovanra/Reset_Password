@@ -39,7 +39,7 @@ public class EventController {
     @DeleteMapping("/{id}")
     public BaseResponse<EventRespone> deleteEvent(@PathVariable String id)
     {
-        return BaseResponse.<EventRespone>ok()
+        return BaseResponse.<EventRespone>deleteSuccess()
                 .setPayload(eventService.deleteEvent(id));
     }
 
@@ -48,5 +48,12 @@ public class EventController {
     {
         return BaseResponse.<EventRespone>ok()
                 .setPayload(eventService.getEventById(id));
+    }
+
+    @GetMapping("/page")
+    public BaseResponse<List<EventRespone>> getByPageNation(@RequestParam int page, @RequestParam int size)
+    {
+        return BaseResponse.<List<EventRespone>>ok()
+                .setPayload(eventService.getByPageNation(page, size));
     }
 }

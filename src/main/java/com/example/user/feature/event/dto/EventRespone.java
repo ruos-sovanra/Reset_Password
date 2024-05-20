@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public record EventRespone(
         String id,
         String eventType,
-        LocalDateTime schedule,
+        LocalDateTime scheduled,
         String eventName,
         String eventPoster,
         String eventDec,

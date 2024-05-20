@@ -16,4 +16,6 @@ public interface EventService {
     EventRespone deleteEvent (String id);
 
     EventRespone getEventById(String id);
+
+    List<EventRespone> getByPageNation(int page, int size);
 }

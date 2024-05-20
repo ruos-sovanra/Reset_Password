@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "al_events")
@@ -17,14 +18,14 @@ public class EventType {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    private LocalDate scheduledDate;
+
     private String eventName;
     private String eventPoster;
     @Column(columnDefinition = "TEXT")
     private String eventDescription;
-
-    private LocalDate createdDate;
-    private LocalDate updatedDate;
+    private LocalDateTime scheduledDate;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     //posttype relatioship
 

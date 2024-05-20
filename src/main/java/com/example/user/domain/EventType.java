@@ -1,8 +1,10 @@
 package com.example.user.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -17,7 +19,6 @@ public class EventType {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-
 
     private String eventName;
     private String eventPoster;

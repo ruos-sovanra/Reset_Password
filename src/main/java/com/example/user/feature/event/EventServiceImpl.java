@@ -85,7 +85,7 @@ public class EventServiceImpl implements EventService{
             throw new IllegalArgumentException("Page number cannot be less than 0");
         }
         if(size < 1) {
-            throw new IllegalArgumentException("Size number cannot be less than 0");
+            throw new IllegalArgumentException("Size number cannot be less than 1");
         }
 
         //make sort request

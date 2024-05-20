@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -27,21 +24,21 @@ public class GlobalRestControllerAdviser {
                 .setMetadata(ex.getMessage());
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("status", HttpStatus.BAD_REQUEST);
-
-        List<String> errors = ex.getBindingResult()
-                .getAllErrors()
-                .stream()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .collect(Collectors.toList());
-
-        body.put("errors", errors);
-
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
-    }
+//    @ExceptionHandler(MethodArgumentNotValidException.class)
+//    public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+//        Map<String, Object> body = new HashMap<>();
+//        body.put("status", HttpStatus.BAD_REQUEST);
+//
+//        List<String> errors = ex.getBindingResult()
+//                .getAllErrors()
+//                .stream()
+//                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+//                .collect(Collectors.toList());
+//
+//        body.put("errors", errors);
+//
+//        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+//    }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public BaseResponse<?> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
@@ -72,6 +69,24 @@ public class GlobalRestControllerAdviser {
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<?> handleResponseStatusException(ResponseStatusException e) {
         return new ResponseEntity<>(e.getReason(), e.getStatusCode());
+    }
+
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public BaseResponseError handlevalidationError(MethodArgumentNotValidException ex) {
+       BaseError<List<?>> baseError = new BaseError<>();
+        List<Map<String,Object>> errors = new ArrayList<>();
+        ex.getBindingResult().getFieldErrors().forEach(error -> {
+            Map<String,Object> errorMap = new HashMap<>();
+            errorMap.put("field",error.getField());
+            errorMap.put("message",error.getDefaultMessage());
+            errors.add(errorMap);
+        });
+        baseError.setCode(HttpStatus.BAD_GATEWAY.getReasonPhrase());
+        baseError.setDescription(errors);
+
+        return new BaseResponseError(baseError);
     }
 
 }

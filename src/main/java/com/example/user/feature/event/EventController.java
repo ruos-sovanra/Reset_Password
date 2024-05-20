@@ -3,6 +3,7 @@ package com.example.user.feature.event;
 import com.example.user.feature.event.dto.EventRequest;
 import com.example.user.feature.event.dto.EventRespone;
 import com.example.user.utils.BaseResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class EventController {
     }
 
     @PostMapping
-    public BaseResponse<EventRespone> createEvent(@RequestBody EventRequest eventRequest)
+    public BaseResponse<EventRespone> createEvent(@Valid  @RequestBody EventRequest eventRequest)
     {
         return BaseResponse.<EventRespone>ok()
                 .setPayload(eventService.createEvent(eventRequest));

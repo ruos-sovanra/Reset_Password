@@ -65,6 +65,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/v1/admin/**").permitAll()
                         .requestMatchers("images/**").permitAll()
                         .requestMatchers("/api/v1/events/**").permitAll()
+                        .requestMatchers("api/v1/files/**").permitAll()
                         .anyRequest().authenticated()
         ).csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)

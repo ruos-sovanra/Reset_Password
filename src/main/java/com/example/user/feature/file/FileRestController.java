@@ -5,6 +5,7 @@ import com.example.user.feature.file.dto.FileResponse;
 import com.example.user.utils.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class FileRestController {
     @PostMapping(value = "", consumes = "multipart/form-data")
     @Operation(summary = "Upload a single file")
     @ResponseStatus(HttpStatus.CREATED)
-    public BaseResponse<FileResponse> uploadSingleFile(
+    public BaseResponse<FileResponse> uploadSingleFile( @Valid
             @RequestPart("file") MultipartFile file, HttpServletRequest request
     ) {
         return BaseResponse

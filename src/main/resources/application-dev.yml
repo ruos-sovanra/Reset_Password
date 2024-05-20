@@ -1,6 +1,11 @@
 spring:
   application:
     name: user
+
+  servlet:
+    multipart:
+      max-request-size: 1MB
+      max-file-size: 1MB
   datasource:
     url: jdbc:postgresql://localhost:5432/user
     username: postgres
@@ -30,6 +35,7 @@ springdoc:
 file_storage:
   image_location: "/filestorage/images/"
   client_path: "/images/**"
+
 server:
   port: 8888
 

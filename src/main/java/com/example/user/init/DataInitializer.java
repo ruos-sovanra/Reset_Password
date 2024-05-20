@@ -1,7 +1,7 @@
 package com.example.user.init;
 
 import com.example.user.domain.*;
-import com.example.user.feature.repo.*;
+import com.example.user.features.repo.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

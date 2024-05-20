@@ -1,8 +1,8 @@
 package com.example.user.mapper;
 
 import com.example.user.domain.Donation;
-import com.example.user.feature.donation.dto.DonationRequest;
-import com.example.user.feature.donation.dto.DonationResponse;
+import com.example.user.features.donation.dto.DonationRequest;
+import com.example.user.features.donation.dto.DonationResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

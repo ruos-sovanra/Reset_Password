@@ -1,8 +1,8 @@
 package com.example.user.mapper;
 
 import com.example.user.domain.EventType;
-import com.example.user.feature.event.dto.EventRequest;
-import com.example.user.feature.event.dto.EventRespone;
+import com.example.user.features.event.dto.EventRequest;
+import com.example.user.features.event.dto.EventRespone;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

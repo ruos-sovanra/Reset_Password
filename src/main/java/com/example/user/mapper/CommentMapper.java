@@ -1,8 +1,8 @@
 package com.example.user.mapper;
 
 import com.example.user.domain.Comment;
-import com.example.user.feature.comment.dto.CommentRequest;
-import com.example.user.feature.comment.dto.CommentResponse;
+import com.example.user.features.comment.dto.CommentRequest;
+import com.example.user.features.comment.dto.CommentResponse;
 import org.mapstruct.*;
 
 import java.util.List;

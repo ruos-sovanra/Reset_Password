@@ -1,7 +1,7 @@
 package com.example.user.security;
 
 
-import com.example.user.feature.auth.dto.AuthResponse;
+import com.example.user.features.auth.dto.AuthResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;

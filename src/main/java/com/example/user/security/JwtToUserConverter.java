@@ -1,7 +1,7 @@
 package com.example.user.security;
 
 import com.example.user.domain.User;
-import com.example.user.feature.user.UserRepository;
+import com.example.user.features.user.UserRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

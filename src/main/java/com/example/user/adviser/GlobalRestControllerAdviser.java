@@ -2,7 +2,6 @@ package com.example.user.adviser;
 
 import com.example.user.utils.BaseResponse;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,20 +13,13 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalRestControllerAdviser {
 
     @Value("${spring.servlet.multipart.max-file-size}")
+
     String fileSize;
-    @ExceptionHandler(NoSuchElementException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public BaseResponse<?> handleNoSuchElementException(NoSuchElementException ex) {
-        return BaseResponse
-                .notFound()
-                .setMetadata(ex.getMessage());
-    }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public BaseResponse<?> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
@@ -38,23 +30,13 @@ public class GlobalRestControllerAdviser {
         } else if (message.contains("user_name")) {
             return BaseResponse.badRequest()
                     .setMetadata("Username already exists");
-        }else {
+        } else {
             // Handle other types of DataIntegrityViolationException or return a generic message
             return BaseResponse.badRequest()
                     .setMetadata("Data integrity violation");
         }
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public BaseResponse<?> handleIllegalArgumentException(IllegalArgumentException ex) {
-        return BaseResponse
-                .badRequest()
-                .setMetadata(ex.getMessage());
-    }
-
-
-    //    image exception , image size, image format ...
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<?> handleResponseStatusException(ResponseStatusException e) {
         return new ResponseEntity<>(e.getReason(), e.getStatusCode());
@@ -63,16 +45,25 @@ public class GlobalRestControllerAdviser {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public BaseResponseError handlevalidationError(MethodArgumentNotValidException ex) {
-       BaseError<List<?>> baseError = new BaseError<>();
-        List<Map<String,Object>> errors = new ArrayList<>();
+    public BaseResponseError handleValidationError(MethodArgumentNotValidException ex) {
+
+        BaseError<List<?>> baseError = new BaseError<>();
+
+        List<Map<String, Object>> errors = new ArrayList<>();
+
         ex.getBindingResult().getFieldErrors().forEach(error -> {
-            Map<String,Object> errorMap = new HashMap<>();
-            errorMap.put("field",error.getField());
-            errorMap.put("message",error.getDefaultMessage());
+
+            Map<String, Object> errorMap = new HashMap<>();
+
+            errorMap.put("field", error.getField());
+
+            errorMap.put("message", error.getDefaultMessage());
+
             errors.add(errorMap);
         });
+
         baseError.setCode(HttpStatus.BAD_GATEWAY.getReasonPhrase());
+
         baseError.setDescription(errors);
 
         return new BaseResponseError(baseError);
@@ -90,6 +81,74 @@ public class GlobalRestControllerAdviser {
         baseError.setCode(HttpStatus.PAYLOAD_TOO_LARGE.getReasonPhrase());
 
         baseError.setDescription("File too large!");
+
+        return new BaseResponseError(baseError);
+    }
+
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public BaseResponseError handleIllegalArgumentException(IllegalArgumentException ex) {
+
+        BaseError<String> baseError = new BaseError<>();
+
+        baseError.setCode(HttpStatus.BAD_REQUEST.getReasonPhrase());
+
+        baseError.setDescription(ex.getMessage());
+
+        return new BaseResponseError(baseError);
+    }
+
+
+    @ExceptionHandler(NoSuchElementException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public BaseResponseError handleNoSuchElementException(NoSuchElementException ex) {
+
+        BaseError<String> baseError = new BaseError<>();
+
+        baseError.setCode(HttpStatus.NOT_FOUND.getReasonPhrase());
+
+        baseError.setDescription(ex.getMessage());
+
+        return new BaseResponseError(baseError);
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public BaseResponseError handleException(Exception ex) {
+
+        BaseError<String> baseError = new BaseError<>();
+
+        baseError.setCode(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+
+        baseError.setDescription(ex.getMessage());
+
+        return new BaseResponseError(baseError);
+    }
+
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public BaseResponseError handleRuntimeException(RuntimeException ex) {
+
+        BaseError<String> baseError = new BaseError<>();
+
+        baseError.setCode(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+
+        baseError.setDescription(ex.getMessage());
+
+        return new BaseResponseError(baseError);
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public BaseResponseError handleIllegalStateException(IllegalStateException ex) {
+
+        BaseError<String> baseError = new BaseError<>();
+
+        baseError.setCode(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+
+        baseError.setDescription(ex.getMessage());
 
         return new BaseResponseError(baseError);
     }

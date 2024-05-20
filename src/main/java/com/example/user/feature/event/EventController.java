@@ -4,6 +4,7 @@ import com.example.user.feature.event.dto.EventRequest;
 import com.example.user.feature.event.dto.EventRespone;
 import com.example.user.utils.BaseResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,9 +52,9 @@ public class EventController {
     }
 
     @GetMapping("/page")
-    public BaseResponse<List<EventRespone>> getByPageNation(@RequestParam int page, @RequestParam int size)
+    public BaseResponse<Page<EventRespone>> getByPageNation(@RequestParam(required = false,defaultValue = "1") int page, @RequestParam(required = false,defaultValue = "1") int size)
     {
-        return BaseResponse.<List<EventRespone>>ok()
+        return BaseResponse.<Page<EventRespone>>ok()
                 .setPayload(eventService.getByPageNation(page, size));
     }
 }

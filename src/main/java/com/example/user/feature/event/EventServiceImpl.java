@@ -1,11 +1,14 @@
 package com.example.user.feature.event;
 
+import com.example.user.domain.EventType;
 import com.example.user.feature.event.dto.EventRequest;
 import com.example.user.feature.event.dto.EventRespone;
 import com.example.user.mapper.EventMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -76,11 +79,29 @@ public class EventServiceImpl implements EventService{
     }
 
     @Override
-    public List<EventRespone> getByPageNation(int page, int size) {
-        int pageSize = page+1;
-        Pageable pageable = PageRequest.of(pageSize, size);
-        var events = eventRepository.findAll(pageable).getContent();
-        return events.stream().map(eventMapper::mapToEventRespone)
-                .toList();
+    public Page<EventRespone> getByPageNation(int page, int size) {
+
+        if(page < 0) {
+            throw new IllegalArgumentException("Page number cannot be less than 0");
+        }
+        if(size < 1) {
+            throw new IllegalArgumentException("Size number cannot be less than 0");
+        }
+
+        //make sort request
+
+        Sort sort = Sort.by(Sort.Direction.ASC,"eventDescription");
+
+       PageRequest pageable= PageRequest.of(page,size,sort);
+
+        Page<EventType> events = eventRepository.findAll(pageable);
+        return events.map(eventMapper::mapToEventRespone);
     }
 }
+
+
+
+
+
+
+

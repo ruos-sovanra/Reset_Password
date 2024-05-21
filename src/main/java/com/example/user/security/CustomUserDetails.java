@@ -33,17 +33,17 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return !user.getIsAccountExpired();
+        return user.getIsAccountExpired();
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return !user.getIsAccountLocked();
+        return user.getIsAccountLocked();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return !user.getIsCredentialsExpired();
+        return user.getIsCredentialsExpired();
     }
 
     @Override

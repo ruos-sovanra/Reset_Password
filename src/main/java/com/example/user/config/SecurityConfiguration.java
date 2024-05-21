@@ -60,8 +60,9 @@ public class SecurityConfiguration {
                                 "/v2/api-docs/**",
                                 "/swagger-resources/**").permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/v1/cv-upload/**").permitAll()
                         .requestMatchers("/forgot-password/**").permitAll()
-                        .requestMatchers("/api/v1/admin/**").hasAnyAuthority("ROLE_ADMIN")
+                        .requestMatchers("/api/v1/admin/**").permitAll()
                         .requestMatchers("/api/v1/jobs/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_PARTNER")
                         .anyRequest().authenticated()
         ).csrf(AbstractHttpConfigurer::disable)

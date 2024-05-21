@@ -2,6 +2,7 @@ package com.example.user.feature.comment;
 
 import com.example.user.feature.comment.dto.CommentRequest;
 import com.example.user.feature.comment.dto.CommentResponse;
+import com.example.user.feature.comment.dto.RepliedRequest;
 import com.example.user.utils.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -58,6 +59,14 @@ public class CommentRestController {
         return BaseResponse.<CommentResponse>updateSuccess()
                 .setPayload(commentService.createComment(commentRequest));
     }
+
+    @PostMapping("/replied")
+    @Operation(summary = "Create replied comment")
+    public BaseResponse<CommentResponse> createRepliedComment(@RequestBody RepliedRequest commentRequest) {
+        return BaseResponse.<CommentResponse>createSuccess()
+                .setPayload(commentService.createRepliedComment(commentRequest));
+    }
+
 
     @PutMapping("/{commentId}")
     @Operation(summary = "Update comment")

@@ -3,6 +3,7 @@ package com.example.user.mapper;
 import com.example.user.domain.Comment;
 import com.example.user.feature.comment.dto.CommentRequest;
 import com.example.user.feature.comment.dto.CommentResponse;
+import com.example.user.feature.comment.dto.RepliedRequest;
 import org.mapstruct.*;
 
 import java.util.List;
@@ -15,6 +16,8 @@ public abstract class CommentMapper {
     @Mapping(target = "replies", source = "replies") // Add this line
     @Named("toCommentResponse")
     public abstract CommentResponse toCommentResponse(Comment comment);
+
+    public abstract Comment fromRequestToResponse(CommentRequest commentRequest);
 
     @AfterMapping
     protected void handleNestedComments(Comment comment, @MappingTarget CommentResponse response) {
@@ -42,7 +45,7 @@ public abstract class CommentMapper {
         );
     }
 
-    public Comment responseToComment(CommentRequest commentRequest, Comment parentComment) {
+    public Comment responseToComment(RepliedRequest commentRequest, Comment parentComment) {
         Comment comment = new Comment();
         comment.setComment(commentRequest.comment()); // Set the comment field
         comment.setParentComment(parentComment);

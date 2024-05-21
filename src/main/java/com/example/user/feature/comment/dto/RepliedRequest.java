@@ -3,9 +3,10 @@ package com.example.user.feature.comment.dto;
 import lombok.Builder;
 
 @Builder
-public record CommentRequest(
+public record RepliedRequest(
         String userId,
         String socialId,
-        String comment
-){
+        String comment,
+        String parentCommentId
+) {
 }

@@ -10,7 +10,7 @@ import org.springframework.validation.annotation.Validated;
 
 @Builder
 @Validated
-@FieldMatch(first = "password", second = "confirm_password", message = "The password fields must match")
+@FieldMatch(first = "password", second = "confirmPassword", message = "The password fields must match")
 public record CreateUserRequest(
         String firstName,
         String lastName,

@@ -5,5 +5,5 @@ import lombok.Builder;
 @Builder
 public record GenerationResponse(String id,
                                  String nameType,
-                                 Integer Generation){
+                                 Integer numGen){
 }

@@ -58,11 +58,16 @@ public class ShareServiceImpl implements ShareService{
 
     @Override
     public ShareResponse updateShare(String id, ShareRequest share) {
-        return null;
+        Share shareEntity = shareRepository.findById(id).orElseThrow(
+                () -> new NoSuchElementException("Share not found")
+        );
+       shareEntity.setCaption(share.caption());
+       shareRepository.save(shareEntity);
+        return shareMapper.entityToResponse(shareEntity);
     }
 
     @Override
     public void deleteShare(String id) {
-
+        shareRepository.deleteById(id);
     }
 }

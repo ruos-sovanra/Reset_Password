@@ -15,5 +15,5 @@ public class Generation {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String nameType;
-    private Integer Generation;
+    private Integer numGen;
 }

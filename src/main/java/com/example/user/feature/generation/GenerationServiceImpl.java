@@ -34,7 +34,7 @@ public class GenerationServiceImpl implements GenerationService {
 
         generation.setNameType(request.nameType());
 
-        generation.setGeneration(request.Generation());
+        generation.setNumGen(request.numGen());
 
         generationRepository.save(generation);
 

@@ -6,7 +6,6 @@ import lombok.Builder;
 public record CommentRequest(
         String userId,
         String socialId,
-        String comment,
-        String parentCommentId
+        String comment
 ){
 }

@@ -25,7 +25,7 @@ public class Comment {
     private Comment parentComment;
 
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> replies = new ArrayList<>(); // Initialize the replies list to an empty list
+    private List<Comment> replies = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "userId", referencedColumnName = "id")
@@ -34,6 +34,10 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "social_id")
     private Social social;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "share_id")
+    private Share share;
 
     private LocalDate createdAt;
     private LocalDate updatedAt;

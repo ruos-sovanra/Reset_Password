@@ -45,6 +45,9 @@ public class User {
     @JoinColumn(name = "acc_type_id")
     private AccType accType;
 
+    @OneToOne(mappedBy = "user")
+    private UserDetail userDetail;
+
 
 
 }

@@ -49,6 +49,12 @@ public class UserServiceImpl implements UserService{
         user.setCreatedAt(LocalDate.now().atStartOfDay());
         user.setUpdatedAt(LocalDate.now().atStartOfDay());
         user.setAccType(accType);
+        user.setIsDisabled(false);
+        user.setIsVerified(false);
+        user.setIsCredentialsExpired(true);
+        user.setIsAccountExpired(true);
+        user.setIsAccountLocked(true);
+        user.setIsAdmin(false);
         user.setPassword(new BCryptPasswordEncoder().encode(userRequest.password()));
         user.setConfirmPassword(new BCryptPasswordEncoder().encode(userRequest.confirmPassword()));
         User savedUser = userRepository.save(user);
@@ -123,6 +129,10 @@ public class UserServiceImpl implements UserService{
         user.setRole(userRole);
         user.setAccType(accType);
         user.setIsVerified(true);
+        user.setIsDisabled(false);
+        user.setIsCredentialsExpired(true);
+        user.setIsAccountExpired(true);
+        user.setIsAccountLocked(true);
         user.setPassword(new BCryptPasswordEncoder().encode(userRequest.password()));
         user.setConfirmPassword(new BCryptPasswordEncoder().encode(userRequest.confirmPassword()));
 

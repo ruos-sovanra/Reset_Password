@@ -31,6 +31,8 @@ public class SocialServiceImpl implements SocialService {
         User user = userRepository.findById(postRequest.userId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         social.setUser(user);
+        social.setLikes(0);
+        social.setShares(0);
         social.setPostType(postType);
         socialRepository.save(social);
 

@@ -2,6 +2,7 @@ package com.example.user.features.usersocialmedia;
 
 import com.example.user.features.usersocialmedia.dto.SocialMediaRequest;
 import com.example.user.features.usersocialmedia.dto.SocialMediaRespoen;
+import com.example.user.features.usersocialmedia.dto.SocialMediaUpdateRequest;
 import com.example.user.utils.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -35,11 +36,11 @@ public class SocialMediaController {
     }
 
     @PutMapping("/{id}")
-    public BaseResponse<SocialMediaRespoen> updateSocialMedia(@RequestBody SocialMediaRequest socialMediaRequest, @PathVariable String id) {
+    public BaseResponse<SocialMediaRespoen> updateSocialMedia(@RequestBody SocialMediaUpdateRequest socialMediaUpdateRequest, @PathVariable String id) {
 
         return BaseResponse.<SocialMediaRespoen>updateSuccess()
 
-                .setPayload(socialMediaService.updateSocialMedia(socialMediaRequest, id));
+                .setPayload(socialMediaService.updateSocialMedia(socialMediaUpdateRequest, id));
     }
 
     @DeleteMapping("/{id}")

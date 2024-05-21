@@ -1,12 +1,13 @@
-package com.example.user.features.comment;
+package com.example.user.feature.comment;
 
 import com.example.user.domain.Comment;
 import com.example.user.domain.Social;
 import com.example.user.domain.User;
-import com.example.user.features.comment.dto.CommentRequest;
-import com.example.user.features.comment.dto.CommentResponse;
-import com.example.user.features.social.SocialRepository;
-import com.example.user.features.user.UserRepository;
+import com.example.user.feature.comment.dto.CommentRequest;
+import com.example.user.feature.comment.dto.CommentResponse;
+import com.example.user.feature.comment.dto.RepliedRequest;
+import com.example.user.feature.social.SocialRepository;
+import com.example.user.feature.user.UserRepository;
 import com.example.user.mapper.CommentMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,16 +27,29 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public CommentResponse createComment(CommentRequest commentRequest) {
-        Comment parentComment = null;
-        if (commentRequest.parentCommentId() != null) {
-            parentComment = commentRepository.findById(commentRequest.parentCommentId()).orElse(null);
-        }
-        Comment comment = commentMapper.responseToComment(commentRequest, parentComment);
+//        Comment parentComment = null;
+//        if (commentRequest.parentCommentId() != null) {
+//            parentComment = commentRepository.findById(commentRequest.parentCommentId()).orElse(null);
+//        }
+        Comment comment = commentMapper.fromRequestToResponse(commentRequest);
         User user = userRepository.findById(commentRequest.userId()).orElseThrow(()-> new NoSuchElementException("User not found"));
         Social social = socialRepository.findById(commentRequest.socialId()).orElseThrow(()-> new NoSuchElementException("Social not found"));
         comment.setUser(user);
         comment.setSocial(social);
         commentRepository.save(comment);
+        return commentMapper.toCommentResponse(comment);
+    }
+
+    @Override
+    public CommentResponse createRepliedComment(RepliedRequest repliedRequest) {
+        Comment parentComment = commentRepository.findById(repliedRequest.parentCommentId()).orElseThrow(()-> new NoSuchElementException("Parent comment not found"));
+        Comment comment = commentMapper.responseToComment(repliedRequest, parentComment);
+        User user = userRepository.findById(repliedRequest.userId()).orElseThrow(()-> new NoSuchElementException("User not found"));
+        Social social = socialRepository.findById(repliedRequest.socialId()).orElseThrow(()-> new NoSuchElementException("Social not found"));
+        comment.setUser(user);
+        comment.setSocial(social);
+        commentRepository.save(comment);
+
         return commentMapper.toCommentResponse(comment);
     }
 

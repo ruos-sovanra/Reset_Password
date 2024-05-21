@@ -6,6 +6,7 @@ import com.example.user.features.social.SocialService;
 import com.example.user.features.user.UserRepository;
 import com.example.user.features.usersocialmedia.dto.SocialMediaRequest;
 import com.example.user.features.usersocialmedia.dto.SocialMediaRespoen;
+import com.example.user.features.usersocialmedia.dto.SocialMediaUpdateRequest;
 import com.example.user.mapper.SocialMapper;
 import com.example.user.mapper.SocialMediaMapper;
 import com.example.user.mapper.UserMapper;
@@ -51,12 +52,12 @@ public class SocialMediaServiceImpl implements SocialMediaService{
     }
 
     @Override
-    public SocialMediaRespoen updateSocialMedia(SocialMediaRequest socialMediaRequest, String id) {
+    public SocialMediaRespoen updateSocialMedia(SocialMediaUpdateRequest mediaUpdateRequest, String id) {
 
         var socialMedia = userSocialMediaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Social Media not found"));
 
-        socialMediaMapper.updateSocialMedia(socialMedia, socialMediaRequest);
+        socialMediaMapper.updateSocialMedia(socialMedia, mediaUpdateRequest);
 
         var socialMedias = userSocialMediaRepository.save(socialMedia);
 

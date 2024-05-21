@@ -1,6 +1,5 @@
 package com.example.user.mapper;
 
-import com.example.user.domain.SocialMedia;
 import com.example.user.domain.User;
 import com.example.user.features.user.dto.CreateUserRequest;
 import com.example.user.features.user.dto.UserRequest;
@@ -9,8 +8,6 @@ import com.example.user.features.user.dto.UserResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {

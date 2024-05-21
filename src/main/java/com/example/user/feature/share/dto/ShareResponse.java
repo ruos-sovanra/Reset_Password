@@ -1,7 +1,6 @@
 package com.example.user.feature.share.dto;
 
-import com.example.user.domain.Social;
-import com.example.user.feature.social.dto.PostResponse;
+import com.example.user.features.social.dto.PostResponse;
 import lombok.Builder;
 
 @Builder

@@ -25,7 +25,7 @@ public class EventController {
     }
 
     @PostMapping
-    public BaseResponse<EventRespone> createEvent(@Valid  @RequestBody EventRequest eventRequest)
+    public BaseResponse<EventRespone> createEvent(@RequestBody EventRequest eventRequest)
     {
         return BaseResponse.<EventRespone>ok()
                 .setPayload(eventService.createEvent(eventRequest));

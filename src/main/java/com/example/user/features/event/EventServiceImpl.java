@@ -34,8 +34,11 @@ public class EventServiceImpl implements EventService{
     public EventRespone createEvent(EventRequest eventRequest) {
 
         var event = eventMapper.mapToEvents(eventRequest);
+
         event.setScheduledDate(LocalDateTime.now());
+
         event.setEventDescription(eventRequest.eventDec());
+
         event.setEventName(eventRequest.eventName());
 
         return eventMapper.mapToEventRespone(eventRepository.save(event));

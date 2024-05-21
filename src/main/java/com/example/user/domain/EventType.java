@@ -1,5 +1,6 @@
 package com.example.user.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -7,8 +8,12 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Date;
+import java.util.Timer;
 
 @Entity
 @Table(name = "al_events")
@@ -27,6 +32,10 @@ public class EventType {
     private LocalDateTime scheduledDate;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+
+    private Time eventStart;
+    private Time eventEnd;
 
     //posttype relatioship
 

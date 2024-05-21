@@ -6,7 +6,7 @@ import com.example.user.domain.UserDetail;
 import com.example.user.feature.cv.dto.UserDetailRequest;
 import com.example.user.feature.cv.dto.UserDetailResponse;
 import com.example.user.feature.generation.GenerationRepository;
-import com.example.user.feature.user.UserRepository;
+import com.example.user.features.user.UserRepository;
 import com.example.user.mapper.UserDetailMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

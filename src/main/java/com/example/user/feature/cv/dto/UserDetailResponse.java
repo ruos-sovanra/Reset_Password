@@ -1,5 +1,6 @@
 package com.example.user.feature.cv.dto;
 
+import com.example.user.feature.generation.dto.GenerationResponse;
 import lombok.Builder;
 
 import java.util.Map;
@@ -20,7 +21,9 @@ public record UserDetailResponse(
         Map<String, Object> achievements,
         Map<String, Object> skills,
         Map<String, Object> languages,
-        String generationId,
+        GenerationResponse generation,
+        String employTypeName,
+        String studyAbroadName,
         String userId
 
 ) {

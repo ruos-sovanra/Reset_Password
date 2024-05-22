@@ -7,8 +7,12 @@ import com.example.user.feature.repo.DonationTypeRepository;
 import com.example.user.feature.repo.EventTypeRepository;
 import com.example.user.feature.repo.PostTypeRepository;
 import com.example.user.feature.user.UserRepository;
+import com.example.user.feature.user.dto.UserResponse;
 import com.example.user.mapper.DonationMapper;
+import com.example.user.utils.CustomPage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,12 +30,9 @@ public class DonationServiceImpl implements DonationService {
     private final DonationMapper donationMapper;
 
     @Override
-    public List<DonationResponse> getAllDonations() {
-        List<Donation> donations = donationRepository.findAll();
-
-        return donations.stream()
-                .map(donationMapper::toDonationResponse)
-                .toList();
+    public CustomPage<DonationResponse> getAllDonations(int page, int size, String baseUrl) {
+        Page<Donation> donations = donationRepository.findAll(Pageable.ofSize(size).withPage(page));
+        return CustomPagination(donations.map(donationMapper::toDonationResponse), baseUrl);
     }
 
     @Override
@@ -100,5 +101,18 @@ public class DonationServiceImpl implements DonationService {
     @Override
     public void deleteDonation(String id) {
         donationRepository.deleteById(id);
+    }
+
+    public CustomPage<DonationResponse> CustomPagination(Page<DonationResponse> page, String baseUrl){
+        CustomPage<DonationResponse> customPage = new CustomPage<>();
+        if(page.hasNext()){
+            customPage.setNext(baseUrl + "?page=" + (page.getNumber() + 1) + "&size=" + page.getSize());
+        }
+        if (page.hasPrevious()){
+            customPage.setPrevious(baseUrl + "?page=" + (page.getNumber() - 1) + "&size=" + page.getSize());
+        }
+        customPage.setTotal((int) page.getTotalElements());
+        customPage.setResults(page.getContent());
+        return customPage;
     }
 }

@@ -7,8 +7,12 @@ import com.example.user.feature.share.dto.ShareRequest;
 import com.example.user.feature.share.dto.ShareResponse;
 import com.example.user.feature.social.SocialRepository;
 import com.example.user.feature.user.UserRepository;
+import com.example.user.feature.user.dto.UserResponse;
 import com.example.user.mapper.ShareMapper;
+import com.example.user.utils.CustomPage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,11 +29,9 @@ public class ShareServiceImpl implements ShareService{
 
 
     @Override
-    public List<ShareResponse> getAllShares() {
-        List<Share> shares = shareRepository.findAll();
-        return shares.stream()
-                .map(shareMapper::entityToResponse)
-                .toList();
+    public CustomPage<ShareResponse> getAllShares(int page, int size, String baseUrl) {
+        Page<Share> shares = shareRepository.findAll(Pageable.ofSize(size).withPage(page));
+        return CustomPagination(shares.map(shareMapper::entityToResponse), baseUrl);
     }
 
     @Override
@@ -69,5 +71,18 @@ public class ShareServiceImpl implements ShareService{
     @Override
     public void deleteShare(String id) {
         shareRepository.deleteById(id);
+    }
+
+    public CustomPage<ShareResponse> CustomPagination(Page<ShareResponse> page, String baseUrl){
+        CustomPage<ShareResponse> customPage = new CustomPage<>();
+        if(page.hasNext()){
+            customPage.setNext(baseUrl + "?page=" + (page.getNumber() + 1) + "&size=" + page.getSize());
+        }
+        if (page.hasPrevious()){
+            customPage.setPrevious(baseUrl + "?page=" + (page.getNumber() - 1) + "&size=" + page.getSize());
+        }
+        customPage.setTotal((int) page.getTotalElements());
+        customPage.setResults(page.getContent());
+        return customPage;
     }
 }

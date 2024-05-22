@@ -63,7 +63,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/v1/cv-upload/**").permitAll()
                         .requestMatchers("/forgot-password/**").permitAll()
                         .requestMatchers("/api/v1/admin/**").permitAll()
-                        .requestMatchers("/api/v1/jobs/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_PARTNER")
+                        .requestMatchers("/api/v1/jobs/**").permitAll()
                         .anyRequest().authenticated()
         ).csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)

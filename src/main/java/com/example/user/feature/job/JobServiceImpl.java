@@ -10,11 +10,13 @@ import com.example.user.feature.repo.PostTypeRepository;
 import com.example.user.feature.repo.StatusRepository;
 import com.example.user.feature.user.UserRepository;
 import com.example.user.mapper.JobMapper;
+import com.example.user.utils.CustomPage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+    import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -72,11 +74,23 @@ public class JobServiceImpl implements JobService{
     }
 
     @Override
-    public List<JobResponse> getAllJobs() {
-        List<Job> jobs = jobRepository.findAll();
+    public CustomPage<JobResponse> getAllJobs(int page, int size,String baseUrl) {
+        Pageable pageable = Pageable.ofSize(size).withPage(page);
+        Page<Job> jobs = jobRepository.findAll(pageable);
 
-        return jobs.stream()
-                .map(jobMapper::toJobResponse)
-                .toList();
+        return CustomPagination(jobs.map(jobMapper::toJobResponse), baseUrl);
+    }
+
+    public CustomPage<JobResponse> CustomPagination(Page<JobResponse> page, String baseUrl){
+        CustomPage<JobResponse> customPage = new CustomPage<>();
+        if(page.hasNext()){
+            customPage.setNext(baseUrl + "?page=" + (page.getNumber() + 1) + "&size=" + page.getSize());
+        }
+        if (page.hasPrevious()){
+            customPage.setPrevious(baseUrl + "?page=" + (page.getNumber() - 1) + "&size=" + page.getSize());
+        }
+        customPage.setTotal((int) page.getTotalElements());
+        customPage.setResults(page.getContent());
+        return customPage;
     }
 }

@@ -24,7 +24,7 @@ public class Share {
     private User user;
 
     @OneToMany(mappedBy = "share")
-    private List<Comment> comments;
+    private List<ShareComment> comments;
 
     private String caption;
     private Integer likes;

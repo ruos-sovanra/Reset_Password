@@ -7,6 +7,7 @@ import lombok.Builder;
 @Builder
 public record ShareResponse(
         String id,
+        String caption,
         PostResponse post,
         Integer likes,
         Integer shares

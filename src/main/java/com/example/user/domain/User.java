@@ -33,6 +33,7 @@ public class User {
     private Boolean isAccountExpired;
     private Boolean isAccountLocked;
     private Boolean isCredentialsExpired;
+    private String coverUrl;
 
     @OneToOne(mappedBy = "user")
     private ForgotPassword forgotPassword;

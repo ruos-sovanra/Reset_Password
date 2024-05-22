@@ -7,12 +7,18 @@ import com.example.user.feature.repo.AccTypeRepository;
 import com.example.user.feature.repo.RoleRepository;
 import com.example.user.feature.user.dto.*;
 import com.example.user.mapper.UserMapper;
+import com.example.user.utils.CustomPage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,10 +30,15 @@ public class UserServiceImpl implements UserService{
     private final UserMapper userMapper;
 
     @Override
-    public List<UserResponse> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        return users.stream().map(userMapper::toUserResponse).toList();
+    public CustomPage<UserResponse> getAllUsers(int page, int size, String baseUrl, Optional<String> genType, Optional<String> genNum) {
+        Pageable pageable = PageRequest.of(page, size);
+        Specification<User> spec = Specification.where(genType.isPresent() ? UserSpecification.hasGenType(genType.get()) : null)
+                .and(genNum.isPresent() ? UserSpecification.hasGenNum(genNum.get()) : null);
+        Page<User> users = userRepository.findAll(spec, pageable);
+        return CustomPagination(users.map(userMapper::toUserResponse), baseUrl);
     }
+
+
 
     @Override
     public UserResponse getUserById(String id) {
@@ -66,6 +77,7 @@ public class UserServiceImpl implements UserService{
         user.setLastName(userRequest.lastName());
         user.setPhone(userRequest.phone());
         user.setUsername(userRequest.username());
+        user.setCoverUrl(userRequest.coverUrl());
         userRepository.save(user);
         return userMapper.toUserResponse(user);
     }
@@ -81,6 +93,7 @@ public class UserServiceImpl implements UserService{
         Role userRole = roleRepository.findByName(profileUpdateRequest.roleName())
                 .orElseThrow(() -> new NoSuchElementException("Role not found"));
         user.setRole(userRole);
+
         userRepository.save(user);
         return userMapper.toUserResponse(user);
     }
@@ -138,5 +151,18 @@ public class UserServiceImpl implements UserService{
     public List<UserResponse> getAllUsersByIsVerify() {
         List<User> users = userRepository.findByIsVerified(false);
         return users.stream().map(userMapper::toUserResponse).toList();
+    }
+
+    public CustomPage<UserResponse> CustomPagination(Page<UserResponse> page, String baseUrl){
+        CustomPage<UserResponse> customPage = new CustomPage<>();
+        if(page.hasNext()){
+            customPage.setNext(baseUrl + "?page=" + (page.getNumber() + 1) + "&size=" + page.getSize());
+        }
+        if (page.hasPrevious()){
+            customPage.setPrevious(baseUrl + "?page=" + (page.getNumber() - 1) + "&size=" + page.getSize());
+        }
+        customPage.setTotal((int) page.getTotalElements());
+        customPage.setResults(page.getContent());
+        return customPage;
     }
 }

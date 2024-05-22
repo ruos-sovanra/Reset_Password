@@ -8,6 +8,7 @@ public record UserUpdateRequest(
         String lastName,
         String username,
         String phone,
-        String avatar
+        String avatar,
+        String coverUrl
 ) {
 }

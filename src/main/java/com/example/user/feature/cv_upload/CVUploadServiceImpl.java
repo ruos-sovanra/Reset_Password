@@ -162,9 +162,7 @@ public class CVUploadServiceImpl implements CVUploadService {
         resumeSections.forEach((key, value) -> log.info("{}: {}", key, value));
     }
 
-    private UserDetail mapToUserDetail(Map<String, String> resumeSections) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-
+    private UserDetail mapToUserDetail(Map<String, String> resumeSections) {
         UserDetail userDetail = new UserDetail();
         userDetail.setFirstName(resumeSections.get("First Name"));
         userDetail.setLastName(resumeSections.get("Last Name"));
@@ -173,13 +171,31 @@ public class CVUploadServiceImpl implements CVUploadService {
         userDetail.setTelephone(resumeSections.get("Telephone"));
         userDetail.setNationality(resumeSections.get("Nationality"));
 
-        userDetail.setLanguages(parseJson(resumeSections.getOrDefault("Languages", "default"), mapper));
-        userDetail.setSkills(parseJson(resumeSections.getOrDefault("Skills", "default"), mapper));
-        userDetail.setEducations(parseJson(resumeSections.getOrDefault("Education", "default"), mapper));
-        userDetail.setWorkExperiences(parseJson(resumeSections.getOrDefault("Experience", "default"), mapper));
-        userDetail.setAchievements(parseJson(resumeSections.getOrDefault("Projects", "default"), mapper));
+        // Parse each section of the resume into a key-value pair
+        Map<String, Object> languages = parseResumeSection(resumeSections.get("Languages"));
+        Map<String, Object> interests = parseResumeSection(resumeSections.get("Interests"));
+        Map<String, Object> skills = parseResumeSection(resumeSections.get("Skills"));
+
+        // Set the parsed sections in the userDetail object
+        userDetail.setLanguages(languages);
+        userDetail.setInterests(interests);
+        userDetail.setSkills(skills);
 
         return userDetail;
+    }
+
+    private Map<String, Object> parseResumeSection(String section) {
+        Map<String, Object> sectionMap = new HashMap<>();
+        String[] lines = section.split("\n");
+        for (String line : lines) {
+            String[] parts = line.split(":");
+            if (parts.length >= 2) {
+                String key = parts[0].trim();
+                String value = parts[1].trim();
+                sectionMap.put(key, value);
+            }
+        }
+        return sectionMap;
     }
 
     private Map<String, Object> parseJson(String jsonString, ObjectMapper mapper) {
@@ -187,7 +203,14 @@ public class CVUploadServiceImpl implements CVUploadService {
             return Collections.emptyMap();
         }
         try {
-            return mapper.readValue(jsonString, new TypeReference<Map<String, Object>>() {});
+            // Parse the JSON string into a Map
+            Map<String, Object> parsedMap = mapper.readValue(jsonString, new TypeReference<Map<String, Object>>() {});
+
+            // Create a new Map with the default key
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("value", parsedMap);
+
+            return resultMap;
         } catch (JsonProcessingException e) {
             log.warn("Invalid JSON format: {}", jsonString);
             return Collections.emptyMap();

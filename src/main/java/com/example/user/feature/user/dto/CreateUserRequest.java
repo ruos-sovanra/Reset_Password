@@ -11,7 +11,7 @@ import org.springframework.validation.annotation.Validated;
 @Builder
 @Validated
 @FieldMatch(first = "password", second = "confirmPassword", message = "The password fields must match")
-public record CreateUserRequest(
+public record   CreateUserRequest(
         String firstName,
         String lastName,
         String username,

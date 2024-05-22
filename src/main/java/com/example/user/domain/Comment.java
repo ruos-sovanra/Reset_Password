@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,10 +35,5 @@ public class Comment {
     @JoinColumn(name = "social_id")
     private Social social;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "share_id")
-    private Share share;
 
-    private LocalDate createdAt;
-    private LocalDate updatedAt;
 }

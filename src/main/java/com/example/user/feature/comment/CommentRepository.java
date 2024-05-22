@@ -1,6 +1,8 @@
 package com.example.user.feature.comment;
 
 import com.example.user.domain.Comment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,4 +13,6 @@ public interface CommentRepository extends JpaRepository<Comment, String> {
     List<Comment> findBySocialId(String socialId);
     List<Comment> findByUserId(String userId);
     List<Comment> findByParentCommentId(String parentCommentId);
+
+    Page<Comment> findAll(Pageable pageable);
 }

@@ -1,16 +1,21 @@
 package com.example.user.feature.admin;
 
+
 import com.example.user.feature.user.UserService;
 import com.example.user.feature.user.dto.CreateUserRequest;
 import com.example.user.feature.user.dto.UserResponse;
 import com.example.user.feature.user.dto.ProfileUpdateRequest;
 import com.example.user.utils.BaseResponse;
+import com.example.user.utils.CustomPage;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/admin")
@@ -21,9 +26,15 @@ public class AdminRestController {
 
     @GetMapping
     @Operation(summary = "Get all users")
-    public BaseResponse<List<UserResponse>> getAllUsers(){
-        return BaseResponse.<List<UserResponse>>ok()
-                .setPayload(userService.getAllUsers());
+    public ResponseEntity<CustomPage<UserResponse>> getAllJobs(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) Optional<String> genType,
+            @RequestParam(required = false) Optional<String> genNum,
+            HttpServletRequest request) {
+        String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/api/v1/admin";
+        CustomPage<UserResponse> userResponseCustomPage = userService.getAllUsers(page, size, baseUrl, genType, genNum);
+        return ResponseEntity.ok(userResponseCustomPage);
     }
 
     @PatchMapping("/{id}/profile")

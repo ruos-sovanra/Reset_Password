@@ -4,8 +4,11 @@ import com.example.user.feature.comment.dto.CommentRequest;
 import com.example.user.feature.comment.dto.CommentResponse;
 import com.example.user.feature.comment.dto.RepliedRequest;
 import com.example.user.utils.BaseResponse;
+import com.example.user.utils.CustomPage;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,9 +22,13 @@ public class CommentRestController {
 
     @GetMapping
     @Operation(summary = "Get all comments")
-    public BaseResponse<List<CommentResponse>> getComments() {
-        return BaseResponse.<List<CommentResponse>>ok()
-                .setPayload(commentService.getComments());
+    public ResponseEntity<CustomPage<CommentResponse>> getAllComments(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            HttpServletRequest request) {
+        String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/api/v1/comments";
+        CustomPage<CommentResponse> commentResponseCustomPage = commentService.getComments(page, size, baseUrl);
+        return ResponseEntity.ok(commentResponseCustomPage);
     }
 
     @GetMapping("/social/{socialId}")

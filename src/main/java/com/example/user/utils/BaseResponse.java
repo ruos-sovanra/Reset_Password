@@ -19,6 +19,7 @@ public class BaseResponse<T> {
                 .setMessage("Created Successfully!!! ")
         ;
     }
+
     public static <T> BaseResponse<T> ok() {
         return new BaseResponse<T>()
                 .setStatus(HttpStatus.OK.value())
@@ -31,11 +32,13 @@ public class BaseResponse<T> {
                 .setStatus(HttpStatus.NOT_FOUND.value())
                 .setMessage("Items could not be found!! ");
     }
+
     public static <T> BaseResponse<T> badRequest(){
         return new BaseResponse<T>()
                 .setStatus(HttpStatus.BAD_REQUEST.value())
                 .setMessage("Bad request provided !");
     }
+
     public static <T> BaseResponse<T> updateSuccess(){
         return new BaseResponse<T>()
                 .setStatus(HttpStatus.OK.value())
@@ -47,6 +50,5 @@ public class BaseResponse<T> {
                 .setStatus(HttpStatus.OK.value())
                 .setMessage("Successfully deleted the entry!");
     }
-
 
 }

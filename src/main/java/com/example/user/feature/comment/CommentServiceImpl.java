@@ -8,8 +8,12 @@ import com.example.user.feature.comment.dto.CommentResponse;
 import com.example.user.feature.comment.dto.RepliedRequest;
 import com.example.user.feature.social.SocialRepository;
 import com.example.user.feature.user.UserRepository;
+import com.example.user.feature.user.dto.UserResponse;
 import com.example.user.mapper.CommentMapper;
+import com.example.user.utils.CustomPage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -100,9 +104,23 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public List<CommentResponse> getComments() {
-        List<Comment> comments = commentRepository.findAll();
-        return comments.stream().map(commentMapper::toCommentResponse).toList();
+    public CustomPage<CommentResponse> getComments(int page, int size, String baseUrl) {
+        Pageable pageable = Pageable.ofSize(size).withPage(page);
+        Page<Comment> comments = commentRepository.findAll(pageable);
+        return CustomPagination(comments.map(commentMapper::toCommentResponse), baseUrl);
+    }
+
+    public CustomPage<CommentResponse> CustomPagination(Page<CommentResponse> page, String baseUrl){
+        CustomPage<CommentResponse> customPage = new CustomPage<>();
+        if(page.hasNext()){
+            customPage.setNext(baseUrl + "?page=" + (page.getNumber() + 1) + "&size=" + page.getSize());
+        }
+        if (page.hasPrevious()){
+            customPage.setPrevious(baseUrl + "?page=" + (page.getNumber() - 1) + "&size=" + page.getSize());
+        }
+        customPage.setTotal((int) page.getTotalElements());
+        customPage.setResults(page.getContent());
+        return customPage;
     }
 
 

@@ -1,12 +1,14 @@
 package com.example.user.feature.user;
 
 import com.example.user.feature.user.dto.*;
+import com.example.user.utils.CustomPage;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
-    List<UserResponse> getAllUsers();
+    CustomPage<UserResponse> getAllUsers(int page, int size, String baseUrl, Optional<String> genType, Optional<String> genNum);
     UserResponse getUserById(String id);
     UserResponse register(UserRequest userRequest);
     UserResponse updateUser(String id, UserUpdateRequest userRequest);

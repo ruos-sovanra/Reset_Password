@@ -19,7 +19,6 @@ public record UserDetailRequest(
         Map<String, Object> achievements,
         Map<String, Object> skills,
         Map<String, Object> languages,
-        String generationId,
         String userId
 
 ) {

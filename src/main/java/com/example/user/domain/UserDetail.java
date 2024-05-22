@@ -25,6 +25,16 @@ public class UserDetail {
     private String nationality;
     private String address;
     private String telephone;
+    private Boolean isGraduated;
+    private Boolean isEmployed;
+
+    @ManyToOne
+    @JoinColumn(name = "employ_type_id")
+    private EmployType employType;
+
+    @ManyToOne
+    @JoinColumn(name = "study_abroad_id")
+    private StudyAbroad studyAbroad;
 
     @Column(name ="educations")
     @JdbcTypeCode(SqlTypes.JSON)

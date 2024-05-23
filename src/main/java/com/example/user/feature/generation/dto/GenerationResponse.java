@@ -4,6 +4,6 @@ import lombok.Builder;
 
 @Builder
 public record GenerationResponse(String id,
-                                 String nameType,
+                                 String genType,
                                  Integer numGen){
 }

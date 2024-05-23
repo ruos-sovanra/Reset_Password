@@ -13,11 +13,13 @@ import com.example.user.mapper.CommentMapper;
 import com.example.user.utils.CustomPage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +54,7 @@ public class CommentServiceImpl implements CommentService{
         Social social = socialRepository.findById(repliedRequest.socialId()).orElseThrow(()-> new NoSuchElementException("Social not found"));
         comment.setUser(user);
         comment.setSocial(social);
+        comment.setComment(repliedRequest.comment());
         commentRepository.save(comment);
 
         return commentMapper.toCommentResponse(comment);
@@ -107,7 +110,17 @@ public class CommentServiceImpl implements CommentService{
     public CustomPage<CommentResponse> getComments(int page, int size, String baseUrl) {
         Pageable pageable = Pageable.ofSize(size).withPage(page);
         Page<Comment> comments = commentRepository.findAll(pageable);
-        return CustomPagination(comments.map(commentMapper::toCommentResponse), baseUrl);
+
+        // Convert to CommentResponse and filter out comments that are replies
+        List<CommentResponse> commentResponses = comments.stream()
+                .map(commentMapper::toCommentResponse)
+                .filter(commentResponse -> commentResponse.parentCommentId() == null)
+                .collect(Collectors.toList());
+
+        // Create a new PageImpl with the filtered comments
+        Page<CommentResponse> filteredComments = new PageImpl<>(commentResponses, pageable, commentResponses.size());
+
+        return CustomPagination(filteredComments, baseUrl);
     }
 
     public CustomPage<CommentResponse> CustomPagination(Page<CommentResponse> page, String baseUrl){

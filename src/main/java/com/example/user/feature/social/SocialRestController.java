@@ -1,5 +1,6 @@
 package com.example.user.feature.social;
 
+import com.example.user.feature.social.dto.LikeUpdateRequest;
 import com.example.user.feature.social.dto.PostRequest;
 import com.example.user.feature.social.dto.PostResponse;
 import com.example.user.utils.BaseResponse;
@@ -50,4 +51,12 @@ public class SocialRestController {
         socialService.deletePost(postId);
         return BaseResponse.<Void>deleteSuccess();
     }
+
+    @PatchMapping("/{postId}/likes")
+    @Operation(summary = "Update likes of a social post")
+    public BaseResponse<PostResponse> updateLikes(@PathVariable String postId, @RequestBody LikeUpdateRequest likeUpdateRequest) {
+        return BaseResponse.<PostResponse>updateSuccess()
+                .setPayload(socialService.updateLikes(postId, likeUpdateRequest));
+    }
+
 }

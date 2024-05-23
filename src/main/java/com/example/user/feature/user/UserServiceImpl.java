@@ -3,6 +3,7 @@ package com.example.user.feature.user;
 import com.example.user.domain.AccType;
 import com.example.user.domain.Role;
 import com.example.user.domain.User;
+import com.example.user.feature.cv.UserDetailSpecification;
 import com.example.user.feature.repo.AccTypeRepository;
 import com.example.user.feature.repo.RoleRepository;
 import com.example.user.feature.user.dto.*;
@@ -30,11 +31,10 @@ public class UserServiceImpl implements UserService{
     private final UserMapper userMapper;
 
     @Override
-    public CustomPage<UserResponse> getAllUsers(int page, int size, String baseUrl, Optional<String> genType, Optional<String> genNum) {
+    public CustomPage<UserResponse> getAllUsers(int page, int size, String baseUrl) {
         Pageable pageable = PageRequest.of(page, size);
-        Specification<User> spec = Specification.where(genType.isPresent() ? UserSpecification.hasGenType(genType.get()) : null)
-                .and(genNum.isPresent() ? UserSpecification.hasGenNum(genNum.get()) : null);
-        Page<User> users = userRepository.findAll(spec, pageable);
+
+        Page<User> users = userRepository.findAll(pageable);
         return CustomPagination(users.map(userMapper::toUserResponse), baseUrl);
     }
 

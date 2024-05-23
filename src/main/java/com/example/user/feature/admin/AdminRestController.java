@@ -29,11 +29,9 @@ public class AdminRestController {
     public ResponseEntity<CustomPage<UserResponse>> getAllJobs(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) Optional<String> genType,
-            @RequestParam(required = false) Optional<String> genNum,
             HttpServletRequest request) {
         String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/api/v1/admin";
-        CustomPage<UserResponse> userResponseCustomPage = userService.getAllUsers(page, size, baseUrl, genType, genNum);
+        CustomPage<UserResponse> userResponseCustomPage = userService.getAllUsers(page, size, baseUrl);
         return ResponseEntity.ok(userResponseCustomPage);
     }
 

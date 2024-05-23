@@ -12,10 +12,13 @@ import com.example.user.mapper.ShareCommentMapper;
 import com.example.user.utils.CustomPage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +48,9 @@ public class ShareCommentServiceImpl implements ShareCommentService{
         Share share = shareRepository.findById(shareRepliedRequest.shareId()).orElseThrow(()-> new NoSuchElementException("Share not found"));
         shareComment.setUser(user);
         shareComment.setShare(share);
+        shareComment.setComment(shareRepliedRequest.comment());
         shareCommentRepository.save(shareComment);
+        System.out.println("Share Comment"+shareRepliedRequest.comment());
         return shareCommentMapper.toShareCommentResponse(shareComment);
     }
 
@@ -75,8 +80,18 @@ public class ShareCommentServiceImpl implements ShareCommentService{
     @Override
     public CustomPage<ShareCommentResponse> getAllShareComments(int page, int size, String baseUrl) {
         Pageable pageable = Pageable.ofSize(size).withPage(page);
-        Page<ShareComment>  shareComments = shareCommentRepository.findAll(pageable);
-        return CustomPagination(shareComments.map(shareCommentMapper::toShareCommentResponse), baseUrl);
+        Page<ShareComment> shareComments = shareCommentRepository.findAll(pageable);
+
+        // Convert to ShareCommentResponse and filter out comments that are replies
+        List<ShareCommentResponse> shareCommentResponses = shareComments.stream()
+                .map(shareCommentMapper::toShareCommentResponse)
+                .filter(shareCommentResponse -> shareCommentResponse.parentCommentId() == null)
+                .collect(Collectors.toList());
+
+        // Create a new PageImpl with the filtered comments
+        Page<ShareCommentResponse> filteredShareComments = new PageImpl<>(shareCommentResponses, pageable, shareCommentResponses.size());
+
+        return CustomPagination(filteredShareComments, baseUrl);
     }
 
     public CustomPage<ShareCommentResponse> CustomPagination(Page<ShareCommentResponse> page, String baseUrl){

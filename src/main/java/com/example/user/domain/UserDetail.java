@@ -1,5 +1,6 @@
 package com.example.user.domain;
 
+import com.example.user.config.Auditable;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ import java.util.Map;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserDetail {
+public class UserDetail extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;

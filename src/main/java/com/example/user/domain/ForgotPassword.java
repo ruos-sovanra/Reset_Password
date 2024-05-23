@@ -1,5 +1,6 @@
 package com.example.user.domain;
 
+import com.example.user.config.Auditable;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ForgotPassword {
+public class ForgotPassword extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;

@@ -10,14 +10,18 @@ public record CommentResponse(
         String id,
         String userName,
         String comment,
-        List<CommentResponse> replies // Add this line
+        List<CommentResponse> replies,
+        String parentCommentId, // existing line
+        boolean replied // Add this line
 ) {
-    public static CommentResponse withNestedComment(Comment comment, CommentResponse nestedComment, List<CommentResponse> replies) {
+    public static CommentResponse withNestedComment(Comment comment, List<CommentResponse> replies) {
         return new CommentResponse(
                 comment.getId(),
                 comment.getUser().getUsername(),
                 comment.getComment(),
-                replies // Add this line
+                replies,
+                comment.getParentComment() != null ? comment.getParentComment().getId() : null, // existing line
+                comment.getParentComment() != null // Add this line
         );
     }
 }

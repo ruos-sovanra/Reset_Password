@@ -32,7 +32,7 @@ public class GenerationServiceImpl implements GenerationService {
                 () -> new NoSuchElementException("Generation not found")
         );
 
-        generation.setNameType(request.nameType());
+        generation.setGenType(request.genType());
 
         generation.setNumGen(request.numGen());
 

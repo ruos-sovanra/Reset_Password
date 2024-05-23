@@ -4,7 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record GenerationRequest(
-        String nameType,
+        String genType,
         Integer numGen
 ) {
 }

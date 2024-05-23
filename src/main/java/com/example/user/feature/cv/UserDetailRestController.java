@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/user-details")
@@ -24,9 +25,15 @@ public class UserDetailRestController {
     @Operation(summary = "Get all user details")
     public ResponseEntity<CustomPage<UserDetailResponse>> getAllUserDetails(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size, HttpServletRequest request) {
+            @RequestParam(defaultValue = "10") int size,@RequestParam(required = false) Optional<String> genType,
+            @RequestParam(required = false) Optional<String> numGen,
+            @RequestParam(required = false) Optional<Boolean> isGraduated,
+            @RequestParam(required = false) Optional<Boolean> isEmployed,
+            @RequestParam(required = false) Optional<String> country,
+            @RequestParam(required = false) Optional<String> employType,
+            HttpServletRequest request) {
         String baseUrl =request.getScheme()+ "://"+ request.getServerName() + ":" + request.getServerPort() +  "/api/v1/user-details";
-        CustomPage<UserDetailResponse> userDetailResponseCustomPage = userDetailService.getAllUserDetails(page, size, baseUrl);
+        CustomPage<UserDetailResponse> userDetailResponseCustomPage = userDetailService.getAllUserDetails(page, size, baseUrl, genType, numGen, isGraduated, isEmployed, country, employType);
         return ResponseEntity.ok(userDetailResponseCustomPage);
     }
 

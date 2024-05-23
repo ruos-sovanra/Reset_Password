@@ -1,5 +1,6 @@
 package com.example.user.domain;
 
+import com.example.user.config.Auditable;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Donation {
+public class Donation extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;

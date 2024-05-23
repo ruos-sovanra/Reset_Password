@@ -6,6 +6,7 @@ import com.example.user.domain.Thumbnail;
 import com.example.user.domain.User;
 import com.example.user.feature.repo.PostTypeRepository;
 import com.example.user.feature.repo.ThumbnailRepository;
+import com.example.user.feature.social.dto.LikeUpdateRequest;
 import com.example.user.feature.social.dto.PostRequest;
 import com.example.user.feature.social.dto.PostResponse;
 import com.example.user.feature.user.UserRepository;
@@ -79,6 +80,16 @@ public class SocialServiceImpl implements SocialService {
     @Override
     public void deletePost(String postId) {
         socialRepository.deleteById(postId);
+    }
+
+    @Override
+    public PostResponse updateLikes(String id, LikeUpdateRequest likeUpdateRequest) {
+        Social social = socialRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+
+        social.setLikes(social.getLikes() + likeUpdateRequest.likes());
+        socialRepository.save(social);
+        return socialMapper.toPostResponse(social);
     }
 
     public CustomPage<PostResponse> CustomPagination(Page<PostResponse> page, String baseUrl){

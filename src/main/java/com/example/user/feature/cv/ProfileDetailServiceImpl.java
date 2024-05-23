@@ -13,10 +13,12 @@ import com.example.user.utils.CustomPage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,9 +33,13 @@ public class ProfileDetailServiceImpl implements UserDetailService{
 
 
     @Override
-    public CustomPage<UserDetailResponse> getAllUserDetails(int page, int size, String baseUrl) {
+    public CustomPage<UserDetailResponse> getAllUserDetails(int page, int size, String baseUrl, Optional<String> genType, Optional<String> numGen, Optional<Boolean> isGraduated, Optional<Boolean> isEmployed, Optional<String> country, Optional<String> employType) {
         Pageable pageable = Pageable.ofSize(size).withPage(page);
-        Page<UserDetail> userDetailPage = userDetailRepository.findAll(pageable);
+        Specification<UserDetail> spec = Specification.where(genType.isPresent() ? UserDetailSpecification.hasGenType(genType.get()) : null)
+                .and(numGen.isPresent() ? UserDetailSpecification.hasGenNum(numGen.get()) : null).and(isGraduated.isPresent() ? UserDetailSpecification.isGraduated(isGraduated.get()) : null)
+                .and(isEmployed.isPresent() ? UserDetailSpecification.isEmployed(isEmployed.get()) : null).and(country.isPresent() ? UserDetailSpecification.hasStudyAbroadCountry(country.get()) : null)
+                .and(employType.isPresent() ? UserDetailSpecification.hasEmployType(employType.get()) : null);
+        Page<UserDetail> userDetailPage = userDetailRepository.findAll(spec,pageable);
         return CustomPagination(userDetailPage.map(userDetailMapper::toUserDetailResponse), baseUrl);
     }
 
@@ -116,6 +122,9 @@ public class ProfileDetailServiceImpl implements UserDetailService{
         userDetail.setEmployType(employType);
         userDetail.setGeneration(generation);
         userDetail.setStudyAbroad(studyAbroad);
+        userDetail.setIsGraduated(adminUpdateRequest.isGraduated());
+        userDetail.setIsEmployed(adminUpdateRequest.isEmployed());
+        userDetailRepository.save(userDetail);
 
         return userDetailMapper.toUserDetailResponse(userDetail);
     }

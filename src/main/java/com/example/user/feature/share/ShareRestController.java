@@ -1,7 +1,9 @@
 package com.example.user.feature.share;
 
+import com.example.user.feature.share.dto.LikeShareUpdateRequest;
 import com.example.user.feature.share.dto.ShareRequest;
 import com.example.user.feature.share.dto.ShareResponse;
+import com.example.user.feature.share.dto.ShareUpdateRequest;
 import com.example.user.utils.BaseResponse;
 import com.example.user.utils.CustomPage;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,12 +45,19 @@ public class ShareRestController {
                 .setPayload(shareService.createShare(share));
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     @Operation(summary = "Update share")
-    public BaseResponse<ShareResponse> updateShare(@PathVariable String id, @RequestBody ShareRequest share) {
+    public BaseResponse<ShareResponse> updateShare(@PathVariable String id, @RequestBody ShareUpdateRequest share) {
         return BaseResponse.<ShareResponse>updateSuccess()
                 .setPayload(shareService.updateShare(id, share));
     }
+    @PatchMapping("/{id}/likes")
+    @Operation(summary = "Update likes of a share")
+    public BaseResponse<ShareResponse> updateLikes(@PathVariable String id, @RequestBody LikeShareUpdateRequest likeShareUpdateRequest) {
+        return BaseResponse.<ShareResponse>updateSuccess()
+                .setPayload(shareService.updateLikes(id, likeShareUpdateRequest));
+    }
+
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete share")

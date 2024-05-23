@@ -1,5 +1,6 @@
 package com.example.user.feature.social;
 
+import com.example.user.feature.social.dto.LikeUpdateRequest;
 import com.example.user.feature.social.dto.PostRequest;
 import com.example.user.feature.social.dto.PostResponse;
 import com.example.user.utils.CustomPage;
@@ -11,4 +12,5 @@ public interface SocialService {
     CustomPage<PostResponse> getPosts(int page, int size,String baseUrl);
     PostResponse updatePost(String postId, PostRequest postRequest);
     void deletePost(String postId);
+    PostResponse updateLikes(String id , LikeUpdateRequest likeUpdateRequest);
 }

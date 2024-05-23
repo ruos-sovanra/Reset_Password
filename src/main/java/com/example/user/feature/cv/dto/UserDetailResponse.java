@@ -24,7 +24,7 @@ public record UserDetailResponse(
         GenerationResponse generation,
         String employTypeName,
         String studyAbroadName,
-        String userId
+        String userName
 
 ) {
 }

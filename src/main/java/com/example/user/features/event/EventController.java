@@ -21,7 +21,8 @@ public class EventController {
     public BaseResponse<List<EventRespone>> getAllEvents()
     {
         return BaseResponse.<List<EventRespone>>ok()
-                .setPayload(eventService.getAllEvents());
+                .setPayload(eventService.getAllEvents())
+                .setTotal(eventService.getAllEvents().size());
     }
 
     @PostMapping

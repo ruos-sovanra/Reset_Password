@@ -12,6 +12,7 @@ public class BaseResponse<T> {
     private String message;
     private Object metadata; // relates to pagination
     private int status;
+    private int total;
 
     public static <T> BaseResponse<T> createSuccess() {
         return new BaseResponse<T>()

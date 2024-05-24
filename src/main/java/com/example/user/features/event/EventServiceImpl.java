@@ -5,11 +5,13 @@ import com.example.user.features.event.dto.EventRequest;
 import com.example.user.features.event.dto.EventRespone;
 import com.example.user.mapper.EventMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
